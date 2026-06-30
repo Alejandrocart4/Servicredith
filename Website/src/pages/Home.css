@@ -1,0 +1,64 @@
+.home-container
+{
+    display: flex;
+    height: 100vh;
+    background: #f3f8f5;
+    overflow: hidden;
+}
+
+/* Right side: content area fills full height */
+.home-page
+{
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Dynamic content area — modules render here */
+.dashboard-content
+{
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* White card shown on the default home view */
+.dashboard-card
+{
+    flex: 1;
+    min-height: 0;
+    background: white;
+    border-radius: 18px;
+    margin: 0 28px 28px;
+    padding: 40px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-empty
+{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.dashboard-empty h2
+{
+    margin-bottom: 10px;
+    color: #0f172a;
+    font-size: 32px;
+}
+
+.dashboard-empty p
+{
+    color: #64748b;
+    font-size: 18px;
+}

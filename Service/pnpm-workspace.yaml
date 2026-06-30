@@ -1,0 +1,5 @@
+allowBuilds:
+  '@scarf/scarf': true
+  bcrypt: true
+  nodemon: true
+  unrs-resolver: true
