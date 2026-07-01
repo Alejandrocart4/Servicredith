@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import FormField from '@/components/form/FormField'
 import BrandPanel from '@/components/BrandPanel'
+import CopyrightNotice from '@/components/CopyrightNotice'
 import './LoginPage.css'
 import { Post } from '@/helpers/fetcher'
 import { LoginFormConfig } from '@/pages/constants/FormConfig'
@@ -103,6 +104,8 @@ export default function LoginPage({ onLogin }) {
                 {loading ? 'Validando...' : 'Entrar'}
               </button>
             </form>
+
+            <CopyrightNotice className="copyright-notice--auth" />
 
           </section>
         </main>

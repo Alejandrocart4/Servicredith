@@ -4,6 +4,7 @@ import DualPanel from "@/components/DualPanel";
 import FormGrid from "@/components/form/FormGrid";
 import FormField from "@/components/form/FormField";
 import BrandPanel from "@/components/BrandPanel";
+import CopyrightNotice from "@/components/CopyrightNotice";
 import{RegisterFormConfig}from '@/pages/constants/FormConfig'
 import{Get,Post}from '@/helpers/fetcher'
 import { toast } from 'react-toastify'
@@ -352,6 +353,8 @@ export default function RegisterPage({ onRegister, onLogin })
                     <button type="button" className="link-btn" onClick={onLogin}>Inicia sesión</button>
 
                 </p>
+
+                <CopyrightNotice className="copyright-notice--auth" />
 
             </div>
 

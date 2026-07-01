@@ -1,6 +1,7 @@
 import "./Sidebar.css"
 import { getUserRole } from "@/helpers/session"
 import { menuItems, ROLE } from "@/helpers/permissions"
+import CopyrightNotice from "@/components/CopyrightNotice"
 
 export default function SideBar({ currentPage, onNavigate, session, onLogout }) {
 
@@ -52,6 +53,7 @@ export default function SideBar({ currentPage, onNavigate, session, onLogout }) 
                     <button className="logout-btn" onClick={onLogout}>
                         Cerrar sesión
                     </button>
+                    <CopyrightNotice className="copyright-notice--sidebar" />
                 </div>
             )}
 
