@@ -26,13 +26,13 @@ const{createCategory,getPagedCategories,updateCategory,activateCategory,deactiva
  *             properties:
  *               name:
  *                 type: string
- *                 example: Tecnologia
+ *                 example: Tecnología
  *               description:
  *                 type: string
- *                 example: Categoria de productos tecnologicos
+ *                 example: Categoría de productos tecnológicos
  *     responses:
  *       201:
- *         description: Categoría creada exitosamente
+ *         description: Categoría creada correctamente
  *       400:
  *         description: Datos inválidos o categoría ya existente
  */
@@ -82,7 +82,7 @@ router.get('/categories',authMiddleware,roleMiddleware(ROLE.OWNER,ROLE.ADMIN,ROL
  *                 example: Hogar
  *               description:
  *                 type: string
- *                 example: Categoria de productos para el hogar
+ *                 example: Categoría de productos para el hogar
  *     responses:
  *       200:
  *         description: Categoría actualizada correctamente

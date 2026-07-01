@@ -3,17 +3,10 @@ import { createPortal } from 'react-dom'
 import { Post, Get } from '@/helpers/fetcher'
 import { toast } from 'react-toastify'
 import DniInput from '@/components/DniInput'
+import { formatCurrency, formatNumber } from '@/helpers/formatters'
 import './CheckoutModal.css'
 
 const ISV_RATE = 0.15
-
-function toCurrency(value) {
-    return new Intl.NumberFormat('es-HN', {
-        style: 'currency',
-        currency: 'HNL',
-        minimumFractionDigits: 2,
-    }).format(Number(value || 0))
-}
 
 function today() {
     return new Date().toISOString().split('T')[0]
@@ -469,39 +462,39 @@ function SummaryPanel({ form, cartItems, subtotal, discountPct, discountAmount, 
                     {cartItems.map(item => (
                         <li key={item.productId} className="checkout-item-row">
                             <span className="checkout-item-name">{item.name}</span>
-                            <span className="checkout-item-qty">×{item.quantity}</span>
-                            <span className="checkout-item-price">{toCurrency(Number(item.sellPrice) * item.quantity)}</span>
+                            <span className="checkout-item-qty">×{formatNumber(item.quantity)}</span>
+                            <span className="checkout-item-price">{formatCurrency(Number(item.sellPrice) * item.quantity)}</span>
                         </li>
                     ))}
                 </ul>
                 <div className="checkout-totals">
                     <div className="checkout-total-row">
                         <span>Subtotal</span>
-                        <span>{toCurrency(subtotal)}</span>
+                        <span>{formatCurrency(subtotal)}</span>
                     </div>
                     {discountAmount > 0 && (
                         <div className="checkout-total-row" style={{ color: '#1a6b30' }}>
-                            <span>Descuento {discountPct}%</span>
-                            <span>−{toCurrency(discountAmount)}</span>
+                            <span>Descuento {formatNumber(discountPct)}%</span>
+                            <span>−{formatCurrency(discountAmount)}</span>
                         </div>
                     )}
                     <div className="checkout-total-row">
                         <span>ISV 15%</span>
-                        <span>{toCurrency(isv15)}</span>
+                        <span>{formatCurrency(isv15)}</span>
                     </div>
                     <div className="checkout-total-row checkout-total-row--final">
                         <span>Total</span>
-                        <span>{toCurrency(total)}</span>
+                        <span>{formatCurrency(total)}</span>
                     </div>
                     {isCash && form.payment && (
                         <>
                             <div className="checkout-total-row" style={{ marginTop: '6px', borderTop: '1px dashed rgba(31,122,55,0.15)', paddingTop: '8px' }}>
                                 <span>Monto recibido</span>
-                                <span>{toCurrency(form.payment)}</span>
+                                <span>{formatCurrency(form.payment)}</span>
                             </div>
                             <div className={`checkout-vuelto ${vuelto < 0 ? 'checkout-vuelto--warning' : ''}`}>
                                 <span>{vuelto >= 0 ? 'Vuelto' : 'Falta'}</span>
-                                <span>{toCurrency(Math.abs(vuelto))}</span>
+                                <span>{formatCurrency(Math.abs(vuelto))}</span>
                             </div>
                         </>
                     )}
@@ -517,18 +510,18 @@ function SummaryPanel({ form, cartItems, subtotal, discountPct, discountAmount, 
                     <div className="checkout-summary-rows">
                         <div className="checkout-summary-row">
                             <span>Abono inicial</span>
-                            <span>{form.payment ? toCurrency(form.payment) : '—'}</span>
+                            <span>{form.payment ? formatCurrency(form.payment) : '—'}</span>
                         </div>
                         {total > Number(form.payment) && (
                             <div className="checkout-summary-row">
                                 <span>Saldo a financiar</span>
-                                <span>{toCurrency(total - Number(form.payment))}</span>
+                                <span>{formatCurrency(total - Number(form.payment))}</span>
                             </div>
                         )}
                         {total > Number(form.payment) && Number(form.monthsToPay) > 0 && (
                             <div className="checkout-summary-row">
                                 <span>Cuota mensual estimada</span>
-                                <span>{toCurrency((total - Number(form.payment)) / Number(form.monthsToPay))}</span>
+                                <span>{formatCurrency((total - Number(form.payment)) / Number(form.monthsToPay))}</span>
                             </div>
                         )}
                         {form.startingDate && (
@@ -540,19 +533,19 @@ function SummaryPanel({ form, cartItems, subtotal, discountPct, discountAmount, 
                         {form.monthsToPay && (
                             <div className="checkout-summary-row">
                                 <span>Cuotas</span>
-                                <span>{form.monthsToPay}</span>
+                                <span>{formatNumber(form.monthsToPay)}</span>
                             </div>
                         )}
                         {form.paymentDay && (
                             <div className="checkout-summary-row">
                                 <span>Día de cobro</span>
-                                <span>{form.paymentDay}</span>
+                                <span>{formatNumber(form.paymentDay)}</span>
                             </div>
                         )}
                         {form.interestRate && (
                             <div className="checkout-summary-row">
                                 <span>Interés</span>
-                                <span>{form.interestRate}%</span>
+                                <span>{formatNumber(form.interestRate)}%</span>
                             </div>
                         )}
                     </div>

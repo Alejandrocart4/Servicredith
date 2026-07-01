@@ -28,19 +28,19 @@ const createCategory=async(req,res)=>
         if(categoryExists)
         {
 
-            return res.status(400).json({message:'Ya existe una categoria con ese nombre'})
+            return res.status(400).json({message:'Ya existe una categoría con ese nombre'})
 
         }
 
         const category=await Categories.create({name:name.trim().toLowerCase(),description:description.trim()})
 
-        return res.status(201).json({message:'Categoria creada exitosamente',category})
+        return res.status(201).json({message:'Categoría creada correctamente',category})
 
     
 
     }catch(error){
 
-        return res.status(500).json({message:'Error al crear la categoria',error:error.message})
+        return res.status(500).json({message:'Error al crear la categoría',error:error.message})
 
     }
 
@@ -59,7 +59,7 @@ const getPagedCategories=async(req,res)=>
 
     }catch(error){
 
-        return res.status(500).json({message:'Error al listar categorias',error:error.message})
+        return res.status(500).json({message:'Error al listar categorías',error:error.message})
 
     }
 
@@ -79,7 +79,7 @@ const updateCategory=async(req,res)=>
         if(!category)
         {
 
-            return res.status(404).json({message:'Categoria no encontrada'})
+            return res.status(404).json({message:'Categoría no encontrada'})
 
         }
 
@@ -102,18 +102,18 @@ const updateCategory=async(req,res)=>
         if(categoryExists&&categoryExists.categoryId!==category.categoryId)
         {
 
-            return res.status(400).json({message:'Ya existe una categoria con ese nombre'})
+            return res.status(400).json({message:'Ya existe una categoría con ese nombre'})
 
         }
 
         await category.update({name:name.trim().toLowerCase(),description:description.trim()})
 
-        return res.status(200).json({message:'Categoria actualizada correctamente',category})
+        return res.status(200).json({message:'Categoría actualizada correctamente',category})
 
     }catch(error){
 
 
-        return res.status(500).json({message:'Error al actualizar la categoria',error:error.message})
+        return res.status(500).json({message:'Error al actualizar la categoría',error:error.message})
 
     }
 
@@ -137,7 +137,7 @@ const activateCategory=async (req, res)=>
         if(category.isActive)
         {
 
-            return res.status(400).json({message:'La categoria ya esta activa'})
+            return res.status(400).json({message:'La categoría ya está activa'})
 
         }
 
@@ -171,7 +171,7 @@ const deactivateCategory=async(req,res)=>
         if(!category.isActive)
         {
 
-            return res.status(400).json({message:'La categoria ya esta desactivada'})
+            return res.status(400).json({message:'La categoría ya está desactivada'})
 
         }
 

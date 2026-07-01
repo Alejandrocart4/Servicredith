@@ -22,7 +22,7 @@ const createCai = async (req, res) => {
         const { governmentId, storeId, expirationDate, range, isRenewal, documentType = '01' } = req.body
 
         if (!governmentId || governmentId.trim() === '') {
-            return res.status(400).json({ message: 'El numero de CAI es requerido' })
+            return res.status(400).json({ message: 'El número de CAI es requerido' })
         }
 
         if (!storeId || storeId.trim() === '') {
@@ -35,15 +35,15 @@ const createCai = async (req, res) => {
         }
 
         if (!expirationDate || expirationDate.trim() === '') {
-            return res.status(400).json({ message: 'La fecha de expiracion del CAI es requerida' })
+            return res.status(400).json({ message: 'La fecha de expiración del CAI es requerida' })
         }
 
         const parsedCaiDate = new Date(expirationDate)
         if (isNaN(parsedCaiDate.getTime())) {
-            return res.status(400).json({ message: 'La fecha de expiracion del CAI no es valida' })
+            return res.status(400).json({ message: 'La fecha de expiración del CAI no es válida' })
         }
         if (parsedCaiDate <= new Date()) {
-            return res.status(400).json({ message: 'La fecha de expiracion del CAI debe ser futura' })
+            return res.status(400).json({ message: 'La fecha de expiración del CAI debe ser futura' })
         }
 
         if (!range) {
@@ -63,7 +63,7 @@ const createCai = async (req, res) => {
         const parsedMax = Number(maxRange)
 
         if (isNaN(parsedMin) || isNaN(parsedMax)) {
-            return res.status(400).json({ message: 'Los rangos deben ser numeros validos' })
+            return res.status(400).json({ message: 'Los rangos deben ser números válidos' })
         }
         if (parsedMin < 0 || parsedMax < 0) {
             return res.status(400).json({ message: 'Los rangos no pueden ser negativos' })
@@ -74,7 +74,7 @@ const createCai = async (req, res) => {
 
         const existingCai = await Cais.findOne({ where: { governmentId } })
         if (existingCai) {
-            return res.status(400).json({ message: 'Ya existe un CAI con ese numero' })
+            return res.status(400).json({ message: 'Ya existe un CAI con ese número' })
         }
 
         if (!isRenewal) {
@@ -87,7 +87,7 @@ const createCai = async (req, res) => {
         const storeMax = await getStoreMaxRange(storeId)
         if (storeMax > 0 && parsedMin <= storeMax) {
             return res.status(400).json({
-                message: `El rango inicial debe ser mayor al ultimo rango registrado para esta tienda (${storeMax})`
+                message: `El rango inicial debe ser mayor al último rango registrado para esta tienda (${storeMax})`
             })
         }
 

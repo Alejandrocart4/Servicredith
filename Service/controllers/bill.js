@@ -140,7 +140,7 @@ async function postBill(req, res) {
         const subtotal = detail.quantity * detail.sellPrice;
         if (subtotal < 0)
             return res.status(400).json({
-                message: `Subtotal [${subtotal}] del producto ${idx + 1} es invalido`
+                message: `Subtotal [${subtotal}] del producto ${idx + 1} es inválido`
             })
 
         const detailDiscountAmount = (detail.discountPercentage / 100) * subtotal;
@@ -148,7 +148,7 @@ async function postBill(req, res) {
 
         if (detail.total !== total)
             return res.status(400).json({
-                message: `Total [${total}] del producto #${idx + 1} es invalido`
+                message: `Total [${total}] del producto #${idx + 1} es inválido`
             })
 
         billSubtotal += total;
@@ -156,7 +156,7 @@ async function postBill(req, res) {
 
     if (paymentType !== BillTypes.CASH && paymentType !== BillTypes.INSTALLMENT) {
         return res.status(400).json({
-            message: `El tipo de pago [${paymentType}] es invalido`
+            message: `El tipo de pago [${paymentType}] es inválido`
         })
     }
 

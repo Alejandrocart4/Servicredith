@@ -50,7 +50,7 @@ export default function SideBar({ currentPage, onNavigate, session, onLogout }) 
                         </div>
                     </div>
                     <button className="logout-btn" onClick={onLogout}>
-                        Cerrar sesion
+                        Cerrar sesión
                     </button>
                 </div>
             )}

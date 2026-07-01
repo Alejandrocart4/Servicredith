@@ -154,7 +154,7 @@ router.get("/products/:id",authMiddleware,roleMiddleware(ROLE.ADMIN,ROLE.OWNER),
  *                 example: 100
  *     responses:
  *       201:
- *         description: Producto agregado exitosamente
+ *         description: Producto agregado correctamente
  *       400:
  *         description: Datos inválidos
  *       404:

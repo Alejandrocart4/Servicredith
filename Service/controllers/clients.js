@@ -92,7 +92,7 @@ const updateClient = async (req, res) => {
 
     if (name !== undefined) {
       if (!name || name.trim() === '') {
-        return res.status(400).json({ message: 'El nombre del cliente no puede estar vacio' })
+        return res.status(400).json({ message: 'El nombre del cliente no puede estar vacío' })
       }
 
       dataToUpdate.name = name

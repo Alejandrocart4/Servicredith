@@ -122,7 +122,7 @@ export default function OwnerCategoryManagementPage()
             throw new Error("El nombre es requerido")
 
         if(!form.description.trim())
-            throw new Error("La descripcion es requerida")
+            throw new Error("La descripción es requerida")
 
         return{
 
@@ -145,12 +145,12 @@ export default function OwnerCategoryManagementPage()
             {
 
                 await updateCategory({categoryId:editingCategory.categoryId,...payload})
-                toast.success("Categoria actualizada correctamente")
+                toast.success("Categoría actualizada correctamente")
 
             }else{
 
                 await createCategory(payload)
-                toast.success("Categoria creada correctamente")
+                toast.success("Categoría creada correctamente")
 
             }
             setRefreshKey((current)=>current+1)
@@ -190,7 +190,7 @@ export default function OwnerCategoryManagementPage()
 
             setRefreshKey((current)=>current+1)
 
-            toast.success(category.isActive?"Categoria desactivada correctamente":"Categoria activa correctamente")
+            toast.success(category.isActive ? "Categoría desactivada correctamente" : "Categoría activada correctamente")
 
         }catch(error){
 
@@ -216,9 +216,9 @@ export default function OwnerCategoryManagementPage()
 
                 <DataGridHeader
 
-                    title="Categorias"
-                    description="Administracion"
-                    addButtonTxt="Nueva categoria"
+                    title="Categorías"
+                    description="Administración"
+                    addButtonTxt="Nueva categoría"
                     onAddClick={openNewDialog}
 
                 >
@@ -226,7 +226,7 @@ export default function OwnerCategoryManagementPage()
                     <HeaderTextFilter
 
                         className="grid-main-filter"
-                        filterPlaceholder="Nombre o descripcion"
+                        filterPlaceholder="Nombre o descripción"
                         value={filter}
                         onChange={setFilter}
 
@@ -287,7 +287,7 @@ export default function OwnerCategoryManagementPage()
 
                 <FormDialog
 
-                    title={editingCategory?"Editar categoria":"Nueva categoria"}
+                    title={editingCategory ? "Editar categoría" : "Nueva categoría"}
                     isOpen={isDialogOpen}
                     setIsOpen={setIsDialogOpen}
                     onAccept={handleAccept}
@@ -308,7 +308,7 @@ export default function OwnerCategoryManagementPage()
                                 name="name"
                                 value={form.name}
                                 onChange={handleFormChange}
-                                placeholder="Tecnologia"
+                                placeholder="Tecnología"
 
                             />
 
@@ -316,7 +316,7 @@ export default function OwnerCategoryManagementPage()
 
                         <label>
 
-                            Descripcion
+                            Descripción
                                 
                             <input
                                 

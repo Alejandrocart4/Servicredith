@@ -1,5 +1,6 @@
 import { Children, cloneElement, useEffect, useState } from 'react'
 import { LeftArrow, Pencil, Restore, RightArrow, Tash } from '@/assets/icons'
+import { formatNumber } from '@/helpers/formatters'
 import './DataTable.css'
 
 export function DataColumn() {
@@ -160,7 +161,7 @@ export function DataTable({ onLoad, children, rowTitle, onRowClick, rowsPerPage 
           <LeftArrow className="grid-paging-btn" />
         </button>
         <h3>
-          Total: {maxCount}&nbsp;Pagina: {page}/{totalPages}
+          Total: {formatNumber(maxCount)}&nbsp;Página: {formatNumber(page)}/{formatNumber(totalPages)}
         </h3>
         <button onClick={handleNext} disabled={page >= totalPages}>
           <RightArrow className="grid-paging-btn" />

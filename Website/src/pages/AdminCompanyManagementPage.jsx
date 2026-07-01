@@ -113,7 +113,7 @@ export default function AdminCompanyManagementPage() {
         throw new Error(res.json.message || 'No se pudo eliminar la compañía')
       }
 
-      toast.success(`Compañía ${company.name} eliminada exitosamente`)
+      toast.success(`Compañía ${company.name} eliminada correctamente`)
 
       setRefreshKey((current) => current + 1)
     } catch (requestError) {

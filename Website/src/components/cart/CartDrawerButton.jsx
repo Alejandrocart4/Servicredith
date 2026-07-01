@@ -1,16 +1,8 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { BagIcon, BoxIcon, CartIcon } from '@/assets/icons'
+import { formatCurrency, formatNumber } from '@/helpers/formatters'
 import './CartDrawerButton.css'
-
-function toCurrency(value) {
-  const numericValue = Number(value || 0)
-  return new Intl.NumberFormat('es-HN', {
-    style: 'currency',
-    currency: 'HNL',
-    maximumFractionDigits: 0,
-  }).format(numericValue)
-}
 
 function buildSparkles() {
   return Array.from({ length: 16 }, (_, index) => {
@@ -119,7 +111,7 @@ export default function CartDrawerButton({
                             >
                               -
                             </button>
-                            <span className="cart-qty-value">Cantidad: {item.quantity}</span>
+                            <span className="cart-qty-value">Cantidad: {formatNumber(item.quantity)}</span>
                             <button
                               type="button"
                               className="cart-qty-button"
@@ -138,7 +130,7 @@ export default function CartDrawerButton({
                             </button>
                           </div>
                         </div>
-                        <strong>{toCurrency(Number(item.sellPrice || 0) * item.quantity)}</strong>
+                        <strong>{formatCurrency(Number(item.sellPrice || 0) * item.quantity)}</strong>
                       </article>
                     ))}
                   </div>
@@ -146,7 +138,7 @@ export default function CartDrawerButton({
                   <footer className="cart-summary">
                     <div className="cart-summary-row">
                       <span>Subtotal</span>
-                      <strong>{toCurrency(subtotal)}</strong>
+                      <strong>{formatCurrency(subtotal)}</strong>
                     </div>
                     <button
                       type="button"
@@ -162,8 +154,8 @@ export default function CartDrawerButton({
                   <div className="cart-empty-icon">
                     <BoxIcon />
                   </div>
-                  <h2>Tu carrito esta vacio</h2>
-                  <p>Explora el catalogo y agrega productos para continuar.</p>
+                  <h2>Tu carrito está vacío</h2>
+                  <p>Explora el catálogo y agrega productos para continuar.</p>
                 </section>
               )}
             </aside>
@@ -185,7 +177,7 @@ export default function CartDrawerButton({
           <span className="cart-trigger-icon">
             <CartIcon />
           </span>
-          {totalItems > 0 && <span className="cart-count-badge">{totalItems}</span>}
+          {totalItems > 0 && <span className="cart-count-badge">{formatNumber(totalItems)}</span>}
           {!compact && <span>{buttonLabel}</span>}
         </button>
 

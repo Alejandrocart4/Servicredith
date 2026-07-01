@@ -15,7 +15,7 @@ const {
  * @swagger
  * /api/checkout-machines:
  *   get:
- *     summary: Obtener todas las maquinas de checkout
+ *     summary: Obtener todas las máquinas de checkout
  *     tags: [Checkout Machines]
  *     parameters:
  *       - in: query
@@ -36,7 +36,7 @@ const {
  *         description: Cantidad de registros a omitir
  *     responses:
  *       200:
- *         description: Lista de maquinas de checkout obtenida correctamente
+ *         description: Lista de máquinas de checkout obtenida correctamente
  */
 router.get('/checkout-machines', getPagedCheckoutMachines)
 
@@ -44,13 +44,13 @@ router.get('/checkout-machines', getPagedCheckoutMachines)
  * @swagger
  * /api/checkout-machines/{id}:
  *   get:
- *     summary: Obtener maquina de checkout por ID
+ *     summary: Obtener máquina de checkout por ID
  *     tags: [Checkout Machines]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la maquina de checkout
+ *         description: ID de la máquina de checkout
  *         schema:
  *           type: string
  *     responses:
@@ -65,7 +65,7 @@ router.get('/checkout-machines/:id', getCheckoutMachineById)
  * @swagger
  * /api/checkout-machines:
  *   post:
- *     summary: Crear una nueva maquina de checkout
+ *     summary: Crear una nueva máquina de checkout
  *     tags: [Checkout Machines]
  *     requestBody:
  *       required: true
@@ -101,13 +101,13 @@ router.post('/checkout-machines', createCheckoutMachine)
  * @swagger
  * /api/checkout-machines/{id}:
  *   put:
- *     summary: Actualizar una maquina de checkout
+ *     summary: Actualizar una máquina de checkout
  *     tags: [Checkout Machines]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la maquina de checkout
+ *         description: ID de la máquina de checkout
  *         schema:
  *           type: string
  *     requestBody:
@@ -140,20 +140,20 @@ router.put('/checkout-machines/:id', updateCheckoutMachine)
  * @swagger
  * /api/checkout-machines/deactivate/{id}:
  *   put:
- *     summary: Desactivar una maquina de checkout
+ *     summary: Desactivar una máquina de checkout
  *     tags: [Checkout Machines]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la maquina de checkout
+ *         description: ID de la máquina de checkout
  *         schema:
  *           type: string
  *     responses:
  *       200:
  *         description: Maquina de checkout desactivada correctamente
  *       400:
- *         description: La maquina ya está desactivada
+ *         description: La máquina ya está desactivada
  *       404:
  *         description: Maquina de checkout no encontrada
  */
@@ -163,20 +163,20 @@ router.put('/checkout-machines/deactivate/:id', deactivateCheckoutMachine)
  * @swagger
  * /api/checkout-machines/activate/{id}:
  *   put:
- *     summary: Activar una maquina de checkout
+ *     summary: Activar una máquina de checkout
  *     tags: [Checkout Machines]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la maquina de checkout
+ *         description: ID de la máquina de checkout
  *         schema:
  *           type: string
  *     responses:
  *       200:
  *         description: Maquina de checkout activada correctamente
  *       400:
- *         description: La maquina ya está activa
+ *         description: La máquina ya está activa
  *       404:
  *         description: Maquina de checkout no encontrada
  */
@@ -186,13 +186,13 @@ router.put('/checkout-machines/activate/:id', activateCheckoutMachine)
  * @swagger
  * /api/checkout-machines/{id}/associate-user:
  *   put:
- *     summary: Asociar usuario a una maquina de checkout
+ *     summary: Asociar usuario a una máquina de checkout
  *     tags: [Checkout Machines]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la maquina de checkout
+ *         description: ID de la máquina de checkout
  *         schema:
  *           type: string
  *     requestBody:
@@ -211,9 +211,9 @@ router.put('/checkout-machines/activate/:id', activateCheckoutMachine)
  *       200:
  *         description: Usuario asociado correctamente
  *       400:
- *         description: Usuario ya tiene una maquina asignada
+ *         description: Usuario ya tiene una máquina asignada
  *       404:
- *         description: Usuario o maquina no encontrada
+ *         description: Usuario o máquina no encontrada
  */
 router.put('/checkout-machines/:id/associate-user', associateUserToCheckoutMachine)
 
@@ -221,13 +221,13 @@ router.put('/checkout-machines/:id/associate-user', associateUserToCheckoutMachi
  * @swagger
  * /api/checkout-machines/{id}:
  *   delete:
- *     summary: Eliminar una maquina de checkout
+ *     summary: Eliminar una máquina de checkout
  *     tags: [Checkout Machines]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la maquina de checkout
+ *         description: ID de la máquina de checkout
  *         schema:
  *           type: string
  *     responses:

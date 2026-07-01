@@ -8,11 +8,8 @@ import { DataGrid, SimpleDataGridHeader } from "@/components/dataGrid/DataGrid"
 import Dialog from "@/components/dialogs/Dialog"
 import { DocumentIcon, CreditCardIcon } from "@/assets/icons"
 import DniInput from "@/components/DniInput"
+import { formatCurrency, formatNumber } from "@/helpers/formatters"
 import "./PaymentPlansPage.css"
-
-function toMoney(value) {
-  return `L. ${Number(value || 0).toFixed(2)}`
-}
 
 function groupByPlan(pendingPayments) {
   const planMap = {}
@@ -47,16 +44,16 @@ function DetailsDialog({ plan, isOpen, setIsOpen }) {
             <span className="value">{plan.client?.dni || "-"}</span>
           </div>
           <div className="details-info-item">
-            <span className="label">Total a Pagar</span>
-            <span className="value">{toMoney(plan.totalToPay)}</span>
+            <span className="label">Total a pagar</span>
+            <span className="value">{formatCurrency(plan.totalToPay)}</span>
           </div>
           <div className="details-info-item">
             <span className="label">Pagado</span>
-            <span className="value">{toMoney(plan.payedAmount)}</span>
+            <span className="value">{formatCurrency(plan.payedAmount)}</span>
           </div>
           <div className="details-info-item">
-            <span className="label">Saldo Pendiente</span>
-            <span className="value">{toMoney(Number(plan.totalToPay) - Number(plan.payedAmount))}</span>
+            <span className="label">Saldo pendiente</span>
+            <span className="value">{formatCurrency(Number(plan.totalToPay) - Number(plan.payedAmount))}</span>
           </div>
           <div className="details-info-item">
             <span className="label">Estado</span>
@@ -66,17 +63,17 @@ function DetailsDialog({ plan, isOpen, setIsOpen }) {
           </div>
           <div className="details-info-item">
             <span className="label">Meses</span>
-            <span className="value">{plan.monthsToPay || "-"}</span>
+            <span className="value">{plan.monthsToPay ? formatNumber(plan.monthsToPay) : "-"}</span>
           </div>
           <div className="details-info-item">
-            <span className="label">Día de Pago</span>
-            <span className="value">{plan.paymentDay || "-"}</span>
+            <span className="label">Día de pago</span>
+            <span className="value">{plan.paymentDay ? formatNumber(plan.paymentDay) : "-"}</span>
           </div>
         </div>
 
         {plan.monthlyPayments?.length > 0 && (
           <div className="details-monthly-section">
-            <h4>Cuotas Mensuales</h4>
+            <h4>Cuotas mensuales</h4>
             <DataTable
               key="dialog-monthly-payments"
               onLoad={async () => ({
@@ -89,9 +86,9 @@ function DetailsDialog({ plan, isOpen, setIsOpen }) {
                 title="Vencimiento"
                 render={(row) => new Date(row.paymentDeadline).toLocaleDateString("es-HN")}
               />
-              <DataColumn title="Monto" render={(row) => toMoney(row.paymentAmount)} />
-              <DataColumn title="Interés" render={(row) => toMoney(row.interestToPay)} />
-              <DataColumn title="Pagado" render={(row) => toMoney(row.payedAmount)} />
+              <DataColumn title="Monto" render={(row) => formatCurrency(row.paymentAmount)} />
+              <DataColumn title="Interés" render={(row) => formatCurrency(row.interestToPay)} />
+              <DataColumn title="Pagado" render={(row) => formatCurrency(row.payedAmount)} />
               <DataColumn
                 title="Estado"
                 render={(row) => (row.isPayed ? "Pagado" : "Pendiente")}
@@ -114,33 +111,54 @@ function PayDialog({ planRow, isOpen, setIsOpen, onSuccess }) {
 
   useEffect(() => {
     if (!isOpen || !planRow?.client?.dni) return
-    setLoadingPlan(true)
-    getPaymentPlan(planRow.client.dni)
-      .then((result) => {
-        const p = result.paymentPlan
-        setPlan(p)
-        const unpaid = (p.monthlyPayments ?? [])
-          .map((mp, idx) => ({ ...mp, originalIndex: idx }))
-          .filter((mp) => !mp.isPayed)
-        if (unpaid.length > 0) {
-          setSelectedMonthIdx(0)
-          const remaining = Number(unpaid[0].paymentAmount) + Number(unpaid[0].interestToPay) - Number(unpaid[0].payedAmount)
-          setAmount(String(remaining))
-        }
-      })
-      .catch((err) => {
-        toast.error(err.message || "No se pudo cargar el plan")
-        setIsOpen(false)
-      })
-      .finally(() => setLoadingPlan(false))
+    let cancelled = false
+
+    queueMicrotask(() => {
+      if (cancelled) return
+      setLoadingPlan(true)
+      getPaymentPlan(planRow.client.dni)
+        .then((result) => {
+          if (cancelled) return
+          const p = result.paymentPlan
+          setPlan(p)
+          const unpaid = (p.monthlyPayments ?? [])
+            .map((mp, idx) => ({ ...mp, originalIndex: idx }))
+            .filter((mp) => !mp.isPayed)
+          if (unpaid.length > 0) {
+            setSelectedMonthIdx(0)
+            const remaining = Number(unpaid[0].paymentAmount) + Number(unpaid[0].interestToPay) - Number(unpaid[0].payedAmount)
+            setAmount(String(remaining))
+          }
+        })
+        .catch((err) => {
+          if (cancelled) return
+          toast.error(err.message || "No se pudo cargar el plan")
+          setIsOpen(false)
+        })
+        .finally(() => {
+          if (!cancelled) setLoadingPlan(false)
+        })
+    })
+
+    return () => {
+      cancelled = true
+    }
   }, [isOpen, planRow?.client?.dni, setIsOpen])
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) return undefined
+    let cancelled = false
+
+    queueMicrotask(() => {
+      if (cancelled) return
       setPlan(null)
       setAmount("")
       setOverflow(true)
       setSelectedMonthIdx(0)
+    })
+
+    return () => {
+      cancelled = true
     }
   }, [isOpen])
 
@@ -199,8 +217,8 @@ function PayDialog({ planRow, isOpen, setIsOpen, onSuccess }) {
             <span className="value">{planRow.client?.dni || "-"}</span>
           </div>
           <div className="pay-info-item">
-            <span className="label">Total Pendiente</span>
-            <span className="value">{toMoney(planRemaining)}</span>
+            <span className="label">Total pendiente</span>
+            <span className="value">{formatCurrency(planRemaining)}</span>
           </div>
         </div>
 
@@ -223,7 +241,7 @@ function PayDialog({ planRow, isOpen, setIsOpen, onSuccess }) {
                 const remaining = Number(mp.paymentAmount) + Number(mp.interestToPay) - Number(mp.payedAmount)
                 return (
                   <option key={mp.monthlyPaymentId} value={idx}>
-                    {new Date(mp.paymentDeadline).toLocaleDateString("es-HN", { month: "long", year: "numeric" })} — Vence {new Date(mp.paymentDeadline).toLocaleDateString("es-HN")} — {toMoney(remaining)}
+                    {new Date(mp.paymentDeadline).toLocaleDateString("es-HN", { month: "long", year: "numeric" })} — Vence {new Date(mp.paymentDeadline).toLocaleDateString("es-HN")} — {formatCurrency(remaining)}
                   </option>
                 )
               })}
@@ -286,7 +304,7 @@ function PendingPaymentsView({ onViewDetails, onPay }) {
         <DataColumn title="Cliente" render={(row) => row.client?.name || "-"} />
         <DataColumn title="DNI" render={(row) => row.client?.dni || "-"} />
         <DataColumn title="Teléfono" render={(row) => row.client?.phone || "-"} />
-        <DataColumn title="Total Pendiente" render={(row) => toMoney(row.totalAmount)} />
+        <DataColumn title="Total pendiente" render={(row) => formatCurrency(row.totalAmount)} />
         <DataColumn
           title="Estado"
           render={(row) => (row.planStatus === "OVERDUE" ? "Vencido" : "Pendiente")}
@@ -328,16 +346,16 @@ function FulfillmentDialog({ plan, isOpen, setIsOpen }) {
             <span className="value">{plan.client?.[0]?.name || "-"}</span>
           </div>
           <div className="fulfillment-info-item">
-            <span className="label">Total a Pagar</span>
-            <span className="value">{toMoney(plan.totalToPay)}</span>
+            <span className="label">Total a pagar</span>
+            <span className="value">{formatCurrency(plan.totalToPay)}</span>
           </div>
           <div className="fulfillment-info-item">
-            <span className="label">Abono Inicial</span>
-            <span className="value">{toMoney(plan.initialPayment)}</span>
+            <span className="label">Abono inicial</span>
+            <span className="value">{formatCurrency(plan.initialPayment)}</span>
           </div>
           <div className="fulfillment-info-item">
-            <span className="label">Meses Pagados</span>
-            <span className="value">{paidMonths.length} de {plan.monthsToPay}</span>
+            <span className="label">Meses pagados</span>
+            <span className="value">{formatNumber(paidMonths.length)} de {formatNumber(plan.monthsToPay)}</span>
           </div>
         </div>
 
@@ -356,8 +374,8 @@ function FulfillmentDialog({ plan, isOpen, setIsOpen }) {
                 {paidMonths.map((mp) => (
                   <tr key={mp.monthlyPaymentId}>
                     <td>{new Date(mp.paymentDeadline).toLocaleDateString(locale, { month: "long", year: "numeric" })}</td>
-                    <td>{toMoney(mp.payedAmount)}</td>
-                    <td>{toMoney(mp.interestToPay)}</td>
+                    <td>{formatCurrency(mp.payedAmount)}</td>
+                    <td>{formatCurrency(mp.interestToPay)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -417,7 +435,7 @@ function EmployeePaymentView() {
     if (!validAmount || !plan) return
     setSubmitting(true)
     try {
-      const response = await payPlan(plan.billPaymentPlanId, finalAmount, selectedMonth?.originalIndex ?? 0)
+      await payPlan(plan.billPaymentPlanId, finalAmount, selectedMonth?.originalIndex ?? 0)
       const result = await getPaymentPlan(dni.trim())
       const updatedPlan = result.paymentPlan
       if (updatedPlan.status === 'PAYED') {
@@ -467,16 +485,16 @@ function EmployeePaymentView() {
                 <span className="value">{clientDni || "-"}</span>
               </div>
               <div className="employee-plan-row">
-                <span className="label">Total a Pagar</span>
-                <span className="value">{toMoney(plan.totalToPay)}</span>
+                <span className="label">Total a pagar</span>
+                <span className="value">{formatCurrency(plan.totalToPay)}</span>
               </div>
               <div className="employee-plan-row">
                 <span className="label">Pagado</span>
-                <span className="value">{toMoney(plan.payedAmount)}</span>
+                <span className="value">{formatCurrency(plan.payedAmount)}</span>
               </div>
               <div className="employee-plan-row">
-                <span className="label">Saldo Pendiente</span>
-                <span className="value">{toMoney(planRemaining)}</span>
+                <span className="label">Saldo pendiente</span>
+                <span className="value">{formatCurrency(planRemaining)}</span>
               </div>
               <div className="employee-plan-row">
                 <span className="label">Estado</span>
@@ -510,7 +528,7 @@ function EmployeePaymentView() {
                       const remaining = Number(mp.paymentAmount) + Number(mp.interestToPay) - Number(mp.payedAmount)
                       return (
                         <option key={mp.monthlyPaymentId} value={idx}>
-                          {new Date(mp.paymentDeadline).toLocaleDateString("es-HN", { month: "long", year: "numeric" })} — Vence {new Date(mp.paymentDeadline).toLocaleDateString("es-HN")} — {toMoney(remaining)}
+                          {new Date(mp.paymentDeadline).toLocaleDateString("es-HN", { month: "long", year: "numeric" })} — Vence {new Date(mp.paymentDeadline).toLocaleDateString("es-HN")} — {formatCurrency(remaining)}
                         </option>
                       )
                     })}

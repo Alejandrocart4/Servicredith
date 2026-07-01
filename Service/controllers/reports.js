@@ -49,22 +49,22 @@ function buildMonthPeriod(query) {
     parsedYear = Number(periodYear)
     parsedMonth = Number(periodMonth)
   } else if (/^\d{4}-/.test(stringMonth)) {
-    throw { status: 400, message: 'El mes debe ser un numero entre 1 y 12 o formato YYYY-MM' }
+    throw { status: 400, message: 'El mes debe ser un número entre 1 y 12 o tener formato YYYY-MM' }
   } else {
     parsedMonth = Number(stringMonth)
     parsedYear = Number(year)
 
     if (!Number.isInteger(parsedYear)) {
-      throw { status: 400, message: 'El año es requerido cuando mes se envia como numero' }
+      throw { status: 400, message: 'El año es requerido cuando el mes se envía como número' }
     }
   }
 
   if (!Number.isInteger(parsedMonth) || parsedMonth < 1 || parsedMonth > 12) {
-    throw { status: 400, message: 'El mes debe ser un numero entre 1 y 12 o formato YYYY-MM' }
+    throw { status: 400, message: 'El mes debe ser un número entre 1 y 12 o tener formato YYYY-MM' }
   }
 
   if (!Number.isInteger(parsedYear) || parsedYear < 1900) {
-    throw { status: 400, message: 'El año debe ser un numero valido' }
+    throw { status: 400, message: 'El año debe ser un número válido' }
   }
 
   return buildMonthlyDateRange(parsedYear, parsedMonth)
@@ -114,7 +114,7 @@ function buildRequiredStoreFilter(storeId) {
 
 function buildRequiredCompanyFilter(companyId) {
   if (companyId === undefined || companyId === null || companyId === '') {
-    throw { status: 400, message: 'El companyId es requerido para generar el reporte de compañia' }
+    throw { status: 400, message: 'El companyId es requerido para generar el reporte de compañía' }
   }
 
   const normalizedCompanyId = String(companyId).trim()
@@ -625,7 +625,7 @@ async function getCompanyReport(req, res) {
     )
 
     if (companyRows.length === 0) {
-      return res.status(404).json({ message: 'Compañia no encontrada' })
+      return res.status(404).json({ message: 'Compañía no encontrada' })
     }
 
     const storeRows = await getMonthlyStoreReportRows({

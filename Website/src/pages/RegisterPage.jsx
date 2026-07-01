@@ -142,7 +142,7 @@ export default function RegisterPage({ onRegister, onLogin })
 
                 )}
 
-                <h2 className="card-title">Crear Cuenta</h2>
+                <h2 className="card-title">Crear cuenta</h2>
                 <p className="card-subtitle">
 
                     Completa el formulario para registrarte en ServiCredith

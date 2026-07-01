@@ -33,7 +33,7 @@ export class ProductFormConfig
 
         }else if(isNaN(form.buyPrice)||Number(form.buyPrice)<0){
 
-            errors.buyPrice="Ingresa un precio de compra valido"
+            errors.buyPrice="Ingresa un precio de compra válido"
 
         }
 
@@ -44,7 +44,7 @@ export class ProductFormConfig
 
         }else if(isNaN(form.sellPrice)||Number(form.sellPrice)<0){
 
-            errors.sellPrice="Ingrese un precio de venta valio"
+            errors.sellPrice="Ingresa un precio de venta válido"
 
         }else if(Number(form.sellPrice)<Number(form.buyPrice)){
 
@@ -55,7 +55,7 @@ export class ProductFormConfig
         if(!form.categories||form.categories.length===0)
         {
 
-            errors.categories="La categoria es necesaria"
+            errors.categories="La categoría es necesaria"
 
         }
         if(!form.storeId){

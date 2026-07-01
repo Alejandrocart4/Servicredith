@@ -129,7 +129,7 @@ const {
  *                     example: 0
  *     responses:
  *       201:
- *         description: Factura creada exitosamente
+ *         description: Factura creada correctamente
  *       400:
  *         description: Datos inválidos
  *       404:

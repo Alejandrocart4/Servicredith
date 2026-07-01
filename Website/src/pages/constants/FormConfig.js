@@ -36,11 +36,11 @@ export class RegisterFormConfig
         if(!form.email.trim())
         {
 
-            errors.email="El correo electronico es requerido"
+            errors.email="El correo electrónico es requerido"
 
         }else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)){
 
-            errors.email="Ingresa un correo valido"
+            errors.email="Ingresa un correo válido"
 
         }
 

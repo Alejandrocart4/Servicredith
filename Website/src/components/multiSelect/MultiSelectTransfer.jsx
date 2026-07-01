@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect,useCallback } from "react";
 import "./MultiSelectTransfer.css";
 
 const LIMIT=10
@@ -13,7 +13,7 @@ export default function MultiSelectTransfer({LoadData,SelectedList=[],onChange,K
     const[error,setError]=useState(null)
     const totalPages=Math.max(1,Math.ceil(total/PageSize))
     const hasNextPage=page<totalPages
-    const loadPage=async(currentPage)=>
+    const loadPage=useCallback(async(currentPage, shouldCancel=()=>false)=>
     {
 
         try
@@ -22,29 +22,31 @@ export default function MultiSelectTransfer({LoadData,SelectedList=[],onChange,K
             setLoading(true)
             setError(null)
             const result=await LoadData({page:currentPage,limit:PageSize})
+            if(shouldCancel()) return
             setAvailableList(result.items)
             setTotal(result.total)
             
         }catch(e){
 
+            if(shouldCancel()) return
             setError(e.message)
 
         }finally{
 
-            setLoading(false)
+            if(!shouldCancel()) setLoading(false)
 
         }
 
-    }
+    },[LoadData,PageSize])
 
     const filteredAvailableList=availableList.filter(item=>!SelectedList.some(selected=>selected[KeyField]===item[KeyField]))
     
     useEffect(()=>
     {
-
-        loadPage(page)
-
-    },[page])
+        let cancelled=false
+        queueMicrotask(()=>loadPage(page,()=>cancelled))
+        return()=>{cancelled=true}
+    },[page,loadPage])
 
 
     const addItem=(item)=>

@@ -43,7 +43,7 @@ describe('CAI - Validacion de campos requeridos', () => {
         const res = mockRes()
         await createCai(req, res)
         expect(res.status).toHaveBeenCalledWith(400)
-        expect(res.json).toHaveBeenCalledWith({ message: 'El numero de CAI es requerido' })
+        expect(res.json).toHaveBeenCalledWith({ message: 'El número de CAI es requerido' })
     })
 
     test('Rechaza si la tienda no existe', async () => {
@@ -71,12 +71,12 @@ describe('CAI - Validacion de campos requeridos', () => {
 
 describe('CAI - Validacion de rangos', () => {
 
-    test('Rechaza si minRange no es un numero valido', async () => {
+    test('Rechaza si minRange no es un número válido', async () => {
         const req = mockReq({ governmentId: 'CAI-001', storeId: 'store-1', expirationDate: '2030-01-01', range: { minRange: 'abc', maxRange: 1000 } })
         const res = mockRes()
         await createCai(req, res)
         expect(res.status).toHaveBeenCalledWith(400)
-        expect(res.json).toHaveBeenCalledWith({ message: 'Los rangos deben ser numeros validos' })
+        expect(res.json).toHaveBeenCalledWith({ message: 'Los rangos deben ser números válidos' })
     })
 
     test('Rechaza si minRange es negativo', async () => {
@@ -176,7 +176,7 @@ describe('CAI - El rango inicial debe ser mayor al ultimo de la tienda', () => {
 
 describe('CAI - Rechaza nuevo CAI si la tienda ya tiene uno activo', () => {
 
-    test('Retorna 409 si la tienda tiene un CAI activo y no es renovacion', async () => {
+    test('Retorna 409 si la tienda tiene un CAI activo y no es renovación', async () => {
         Cais.findOne
             .mockResolvedValueOnce(null)                      // governmentId check → ok
             .mockResolvedValueOnce({ caiId: 'cai-activo' }) // storeId+isActive check → existe
@@ -286,7 +286,7 @@ describe('CaiRange - updateCaiRange solo extiende maxRange', () => {
         await updateCaiRange(req, res)
 
         expect(res.status).toHaveBeenCalledWith(400)
-        expect(res.json).toHaveBeenCalledWith({ message: 'El rango final no puede ser menor al numero de factura actual' })
+        expect(res.json).toHaveBeenCalledWith({ message: 'El rango final no puede ser menor al número de factura actual' })
     })
 
     test('Rechaza si el nuevo maxRange no es mayor al actual', async () => {
@@ -312,7 +312,7 @@ describe('CaiRange - updateCaiRange solo extiende maxRange', () => {
         expect(res.json).toHaveBeenCalledWith({ message: 'No se puede modificar el rango porque ya existen facturas emitidas' })
     })
 
-    test('Actualiza maxRange correctamente cuando es valido', async () => {
+    test('Actualiza maxRange correctamente cuando es válido', async () => {
         const rangeMock = { caiRangeId: 'r-1', currentNumber: 0, maxRange: 1000, update: jest.fn().mockResolvedValue(true) }
         CaiRanges.findByPk.mockResolvedValue(rangeMock)
         Bills.count.mockResolvedValue(0)

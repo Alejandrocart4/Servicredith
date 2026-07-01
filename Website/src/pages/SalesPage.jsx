@@ -5,14 +5,11 @@ import MultiSelect from '@/components/multiSelect/MultiSelect'
 import { DataGrid } from '@/components/dataGrid/DataGrid'
 import { CartIcon } from '@/assets/icons'
 import { Get } from '@/helpers/fetcher'
+import { formatCurrency, formatNumber } from '@/helpers/formatters'
 import { toast } from 'react-toastify'
 import './SalesPage.css'
 
 const pageSizeOptions = [8, 12, 16, 20]
-
-function toCurrency(value) {
-  return new Intl.NumberFormat('es-HN', { style: 'currency', currency: 'HNL', maximumFractionDigits: 0 }).format(Number(value || 0))
-}
 
 function formatCategoryName(name) {
   return String(name || '').split(' ').filter(Boolean).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
@@ -118,9 +115,9 @@ export default function SalesPage({ session }) {
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1)
 
   const activeCategoryTitle = useMemo(() => {
-    if (selectedCategories.length === 0) return 'Todo el catalogo'
+    if (selectedCategories.length === 0) return 'Todo el catálogo'
     if (selectedCategories.length === 1) return selectedCategories[0].label
-    return `${selectedCategories.length} categorias seleccionadas`
+    return `${formatNumber(selectedCategories.length)} categorías seleccionadas`
   }, [selectedCategories])
 
   const loadCategoryOptions = async (categorySearch, _loadedOptions, { page: optionPage }) => {
@@ -204,7 +201,7 @@ export default function SalesPage({ session }) {
         <DataGrid>
           <div className="data-grid-header">
             <div>
-              <p className="data-grid-kicker">Catalogo activo</p>
+              <p className="data-grid-kicker">Catálogo activo</p>
               <h1 className="data-grid-header-title">
                 <button type="button" className="sales-title-reset" onClick={handleResetCatalog}>
                   {activeCategoryTitle}
@@ -228,11 +225,11 @@ export default function SalesPage({ session }) {
               className="grid-main-filter"
               value={search}
               onChange={handleSearchChange}
-              placeholder="Buscar en el catalogo"
+              placeholder="Buscar en el catálogo"
             />
             <div className="sales-category-filter">
               <MultiSelect
-                title="Categorias"
+                title="Categorías"
                 selected={selectedCategories}
                 onSelect={handleCategorySelect}
                 onLoad={loadCategoryOptions}
@@ -270,7 +267,7 @@ export default function SalesPage({ session }) {
                 </div>
               )}
             </div>
-            <span className="sales-results-count">{visibleProducts.length} resultados</span>
+            <span className="sales-results-count">{formatNumber(visibleProducts.length)} resultados</span>
           </form>
 
           <div className="sales-grid">
@@ -284,7 +281,7 @@ export default function SalesPage({ session }) {
                     {formatCategoryName(product.categories?.[0]?.name || selectedCategoryNames[0] || 'destacado')}
                   </p>
                   <h3>{product.name}</h3>
-                  <strong className="sales-product-price">{toCurrency(product.sellPrice)}</strong>
+                  <strong className="sales-product-price">{formatCurrency(product.sellPrice)}</strong>
                   <button
                     type="button"
                     className="sales-add-cart-button"
@@ -299,13 +296,13 @@ export default function SalesPage({ session }) {
             ))}
           </div>
 
-          <nav className="sales-pagination" aria-label="Paginacion de productos">
+          <nav className="sales-pagination" aria-label="Paginación de productos">
             <button
               type="button"
               className="sales-page-arrow"
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
-              aria-label="Pagina anterior"
+              aria-label="Página anterior"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="m15 6-6 6 6 6" />
@@ -320,7 +317,7 @@ export default function SalesPage({ session }) {
                 onClick={() => goToPage(pageNumber)}
                 aria-current={currentPage === pageNumber ? 'page' : undefined}
               >
-                {pageNumber}
+                {formatNumber(pageNumber)}
               </button>
             ))}
 
@@ -329,7 +326,7 @@ export default function SalesPage({ session }) {
               className="sales-page-arrow"
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              aria-label="Pagina siguiente"
+              aria-label="Página siguiente"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="m9 6 6 6-6 6" />

@@ -9,7 +9,7 @@ async function request(method, path, body) {
         headers: {
             "Content-Type": "application/json",
         },
-        credentials:'include',//envia y recibe cookies automaticamente
+        credentials:'include',//envía y recibe cookies automáticamente
         body: body !== null && typeof body === 'object' ? JSON.stringify(body) : body,
     });
 

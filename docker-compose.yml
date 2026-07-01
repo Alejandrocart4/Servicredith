@@ -1,7 +1,7 @@
 services:
   credith_db:
     image: postgres:17
-    container_name: credith_db
+    container_name: Servicredith_db
     environment:
       POSTGRES_PASSWORD: 123456
       POSTGRES_USER: postgres

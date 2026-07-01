@@ -1,6 +1,6 @@
 import "./ProductFilters.css"
 
-export default function ProductFilters({search,onSearchChange,productCount = 0,onCategoriesClick,onShowArchivedClick,categories,showCategories,selectedCategory,setSelectedCategory,setShowCategories,showArchived,stores=[],selectedStore="",setSelectedStore,isOwner=false,}) 
+export default function ProductFilters({search,onSearchChange,onCategoriesClick,onShowArchivedClick,categories,showCategories,selectedCategory,setSelectedCategory,setShowCategories,showArchived,stores=[],selectedStore="",setSelectedStore,isOwner=false,})
 {
 
     return(
@@ -64,7 +64,7 @@ export default function ProductFilters({search,onSearchChange,productCount = 0,o
                             <rect x="14" y="14" width="7" height="7" />
                         </svg>
 
-                        {selectedCategory || "Categories"}
+                        {selectedCategory || "Categorías"}
 
                         <svg
 
@@ -144,7 +144,7 @@ export default function ProductFilters({search,onSearchChange,productCount = 0,o
 
                         >
 
-                            <option value="">Inventario General</option>
+                            <option value="">Inventario general</option>
                             {
 
                                 stores?.map(store=>(
@@ -198,15 +198,11 @@ export default function ProductFilters({search,onSearchChange,productCount = 0,o
 
                     {
 
-                        showArchived?"Mostrar Productos":"Mostrar Archivados"
+                        showArchived ? "Mostrar productos" : "Mostrar archivados"
 
                     }
 
                 </button>
-
-                <span className="product-count">
-                    {/* {productCount} */}
-                </span>
 
             </div>
 

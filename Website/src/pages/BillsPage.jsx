@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { Get } from '@/helpers/fetcher'
 import { getSession } from '@/helpers/session'
 import { ROLE } from '@/helpers/permissions'
+import { formatCurrency, formatNumber } from '@/helpers/formatters'
 import { DataGrid } from '@/components/dataGrid/DataGrid'
 import { DataTable, DataColumn, ActionColumn, CustomAction } from '@/components/dataGrid/DataTable'
 import Dialog from '@/components/dialogs/Dialog'
@@ -42,10 +43,6 @@ function getDateRange(rangeType, specificDay) {
   return { from: null, to: null }
 }
 
-function toMoney(value) {
-  return `L. ${Number(value || 0).toFixed(2)}`
-}
-
 function formatDate(value) {
   if (!value) return '-'
   return new Date(value).toLocaleDateString('es-HN', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -83,19 +80,19 @@ function BillDetailsDialog({ bill, isOpen, setIsOpen }) {
           </div>
           <div className="bills-meta-row">
             <span>Subtotal</span>
-            <strong>{toMoney(bill.subtotal)}</strong>
+            <strong>{formatCurrency(bill.subtotal)}</strong>
           </div>
           <div className="bills-meta-row">
             <span>Descuento</span>
-            <strong>{toMoney(bill.discountAmount)}</strong>
+            <strong>{formatCurrency(bill.discountAmount)}</strong>
           </div>
           <div className="bills-meta-row">
             <span>ISV 15%</span>
-            <strong>{toMoney(isv15)}</strong>
+            <strong>{formatCurrency(isv15)}</strong>
           </div>
           <div className="bills-meta-row bills-meta-total">
             <span>Total</span>
-            <strong>{toMoney(bill.total)}</strong>
+            <strong>{formatCurrency(bill.total)}</strong>
           </div>
         </div>
 
@@ -119,10 +116,10 @@ function BillDetailsDialog({ bill, isOpen, setIsOpen }) {
                 {details.map((d) => (
                   <tr key={d.billDetailId}>
                     <td>{d.product?.name || '-'}</td>
-                    <td>{d.quantity}</td>
-                    <td>{toMoney(d.sellPrice)}</td>
-                    <td>{toMoney(d.discountAmount)}</td>
-                    <td>{toMoney(d.total)}</td>
+                    <td>{formatNumber(d.quantity)}</td>
+                    <td>{formatCurrency(d.sellPrice)}</td>
+                    <td>{formatCurrency(d.discountAmount)}</td>
+                    <td>{formatCurrency(d.total)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -245,12 +242,12 @@ export default function BillsPage() {
           <DataColumn title="Cliente"     render={(row) => row.customerName || '-'} />
           <DataColumn title="Tipo"        render={(row) => paymentTypeLabel(row.paymentType)} />
           {isManagerRole && (
-            <DataColumn title="G. Bruta" render={(row) => toMoney(row.grossGain)} />
+            <DataColumn title="G. Bruta" render={(row) => formatCurrency(row.grossGain)} />
           )}
           {isManagerRole && (
-            <DataColumn title="G. Neta"  render={(row) => toMoney(row.netGain)} />
+            <DataColumn title="G. Neta"  render={(row) => formatCurrency(row.netGain)} />
           )}
-          <DataColumn title="Total"       render={(row) => toMoney(row.total)} />
+          <DataColumn title="Total"       render={(row) => formatCurrency(row.total)} />
           <DataColumn title="Fecha"       render={(row) => formatDate(row.createdAt)} />
           <ActionColumn>
             <CustomAction

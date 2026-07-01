@@ -8,17 +8,17 @@ const createCheckoutMachine = async (req, res) => {
     const { machineNumber, name, storeId } = req.body
 
     if (machineNumber === undefined || machineNumber === null || machineNumber === '') {
-      return res.status(400).json({ message: 'El numero de maquina es requerido' })
+      return res.status(400).json({ message: 'El número de máquina es requerido' })
     }
 
     const parsedMachineNumber = Number(machineNumber)
 
     if (!Number.isInteger(parsedMachineNumber)) {
-      return res.status(400).json({ message: 'El numero de maquina debe ser un numero entero' })
+      return res.status(400).json({ message: 'El número de máquina debe ser un número entero' })
     }
 
     if (!name || name.trim() === '') {
-      return res.status(400).json({ message: 'El nombre de la maquina es requerido' })
+      return res.status(400).json({ message: 'El nombre de la máquina es requerido' })
     }
 
     if (!storeId || storeId.trim() === '') {
@@ -123,13 +123,13 @@ const updateCheckoutMachine = async (req, res) => {
 
     if (machineNumber !== undefined) {
       if (machineNumber === null || machineNumber === '') {
-        return res.status(400).json({ message: 'El numero de maquina no puede estar vacio' })
+        return res.status(400).json({ message: 'El número de máquina no puede estar vacío' })
       }
 
       const parsedMachineNumber = Number(machineNumber)
 
       if (!Number.isInteger(parsedMachineNumber)) {
-        return res.status(400).json({ message: 'El numero de maquina debe ser un numero entero' })
+        return res.status(400).json({ message: 'El número de máquina debe ser un número entero' })
       }
 
       dataToUpdate.machineNumber = parsedMachineNumber
@@ -137,7 +137,7 @@ const updateCheckoutMachine = async (req, res) => {
 
     if (name !== undefined) {
       if (!name || name.trim() === '') {
-        return res.status(400).json({ message: 'El nombre de la maquina no puede estar vacio' })
+        return res.status(400).json({ message: 'El nombre de la máquina no puede estar vacío' })
       }
 
       dataToUpdate.name = name
@@ -173,7 +173,7 @@ const deactivateCheckoutMachine = async (req, res) => {
     }
 
     if (!checkoutMachine.isActive) {
-      return res.status(400).json({ message: 'La maquina de checkout ya esta desactivada' })
+      return res.status(400).json({ message: 'La máquina de checkout ya está desactivada' })
     }
 
     await checkoutMachine.update({ isActive: false })
@@ -195,7 +195,7 @@ const activateCheckoutMachine = async (req, res) => {
     }
 
     if (checkoutMachine.isActive) {
-      return res.status(400).json({ message: 'La maquina de checkout ya esta activa' })
+      return res.status(400).json({ message: 'La máquina de checkout ya está activa' })
     }
 
     await checkoutMachine.update({ isActive: true })
@@ -230,13 +230,13 @@ const associateUserToCheckoutMachine = async (req, res) => {
 
     // Check if user already has a different machine
     if (user.checkoutMachineId && user.checkoutMachineId !== id) {
-      return res.status(400).json({ message: 'El usuario ya tiene una maquina asignada' })
+      return res.status(400).json({ message: 'El usuario ya tiene una máquina asignada' })
     }
 
     await user.update({ checkoutMachineId: id })
 
     res.json({
-      message: 'Usuario asociado a la maquina de checkout correctamente',
+      message: 'Usuario asociado a la máquina de checkout correctamente',
       checkoutMachine
     })
   } catch (error) {

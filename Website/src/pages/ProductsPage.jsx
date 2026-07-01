@@ -13,6 +13,7 @@ import { toast } from "react-toastify"
 import { getStores } from "@/helpers/store"
 import { getSession } from "@/helpers/session"
 import { Patch } from "@/helpers/fetcher"
+import { formatCurrency, formatNumber } from "@/helpers/formatters"
 
 export default function ProductsPage()
 {
@@ -39,7 +40,7 @@ export default function ProductsPage()
     const assginedStore=stores.find(store=>store.storeId===session?.storeId)//FILTRAR PARA LA TIENDA CON STOCK Y PRODUCTO PARA EL ADMIN LOGUEADO
     const isGeneralInventory=session?.role==="OWNER"&&!selectedStore
 
-    //cargar tiendas y categorias
+    //cargar tiendas y categorías
     useEffect(() =>
     {
 
@@ -91,7 +92,7 @@ export default function ProductsPage()
 
                 const storeId=session?.role==="ADMIN"?session.storeId:selectedStore
                 await deleteProduct(product.productId,storeId)
-                toast.success(`Prodcucto ${product.name} eliminado de la tienda`)
+                toast.success(`Producto ${product.name} eliminado de la tienda`)
 
             }
 
@@ -419,7 +420,7 @@ export default function ProductsPage()
 
                     render={(row) =>
 
-                        `L. ${Number(row.buyPrice).toFixed(2)}`
+                        formatCurrency(row.buyPrice)
 
                     }
 
@@ -433,7 +434,7 @@ export default function ProductsPage()
 
                     render={(row) =>
 
-                        `L. ${Number(row.sellPrice).toFixed(2)}`
+                        formatCurrency(row.sellPrice)
 
                     }
 
@@ -448,9 +449,7 @@ export default function ProductsPage()
                     render={(row) =>
                     {
 
-                        return (
-
-                            row.inventories?.reduce(
+                        const stock = row.inventories?.reduce(
 
                                 (total,inventory)=>
                                     
@@ -458,9 +457,9 @@ export default function ProductsPage()
 
                                 0
 
-                            )
+                            )||0
 
-                        )||0
+                        return formatNumber(stock)
 
                     }}
 
@@ -625,7 +624,7 @@ export default function ProductsPage()
 
                             <option key={inv.storeId} value={inv.storeId}>
 
-                                {inv.store?.address||inv.storeId} — {inv.inStock} unidades
+                                {inv.store?.address||inv.storeId} — {formatNumber(inv.inStock)} unidades
 
                             </option>
 

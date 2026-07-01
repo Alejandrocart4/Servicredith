@@ -75,31 +75,39 @@ export default function ProductForm({isOpen,setIsOpen,onCreated,product=null,set
 
     useEffect(() => 
     {
+        let cancelled=false
 
-        if(product)
+        queueMicrotask(()=>
         {
+            if(cancelled) return
 
-            setForm({
+            if(product)
+            {
 
-                name:product.name,
-                description:product.description,
-                buyPrice:Number(product.buyPrice),
-                sellPrice:Number(product.sellPrice),
-                imageUrl:product.imageUrl,
-                storeId:product.storeId||session?.storeId||"",
-                storeName:product.storeId||(session?.storeAddress?`Sucursal ${session.storeAddress}`:""),
-                initialStock:product.inventories?.reduce((total,inv)=>total+(inv.inStock||0),0)||"",
-                categories:product.categories.map(c=>({value:c.categoryId,label: c.name})),
+                setForm({
 
-            })
+                    name:product.name,
+                    description:product.description,
+                    buyPrice:Number(product.buyPrice),
+                    sellPrice:Number(product.sellPrice),
+                    imageUrl:product.imageUrl,
+                    storeId:product.storeId||session?.storeId||"",
+                    storeName:product.storeId||(session?.storeAddress?`Sucursal ${session.storeAddress}`:""),
+                    initialStock:product.inventories?.reduce((total,inv)=>total+(inv.inStock||0),0)||"",
+                    categories:product.categories.map(c=>({value:c.categoryId,label: c.name})),
 
-        }else{
+                })
 
-            setForm(ProductFormConfig.INITIAL_FORM)
+            }else{
 
-        }
+                setForm(ProductFormConfig.INITIAL_FORM)
 
-    }, [product])
+            }
+        })
+
+        return()=>{cancelled=true}
+
+    }, [product,session?.storeAddress,session?.storeId])
 
     const handleBlur=(field)=>()=>
     {
@@ -110,7 +118,7 @@ export default function ProductForm({isOpen,setIsOpen,onCreated,product=null,set
 
     }
 
-    //------------------cambiar despues si se quiere crear producto con varios tipos de categorias--------------------------------
+    //------------------cambiar después si se quiere crear producto con varios tipos de categorías--------------------------------
     const handleCategories=(selected)=>
     {
 
@@ -131,7 +139,7 @@ export default function ProductForm({isOpen,setIsOpen,onCreated,product=null,set
 
     }
 
-    //cargar categorias       'se agrega '_' por que no se usa el parametro
+    //cargar categorías       'se agrega '_' por que no se usa el parámetro
     const loadCategories=async(search,_loadedOptions,{page})=>
     {
 
@@ -219,7 +227,7 @@ export default function ProductForm({isOpen,setIsOpen,onCreated,product=null,set
                     stock:Number(form.initialStock)
 
                 })
-                toast.success(`${form.name} actualizado exitosamente`)
+                toast.success(`${form.name} actualizado correctamente`)
 
             }else{
 
@@ -241,7 +249,7 @@ export default function ProductForm({isOpen,setIsOpen,onCreated,product=null,set
                     initialStock:Number(form.initialStock)
 
                 })
-                toast.success(`Producto ${form.name} agregado exitosamente`)
+                toast.success(`Producto ${form.name} agregado correctamente`)
 
             }
 
@@ -372,7 +380,7 @@ export default function ProductForm({isOpen,setIsOpen,onCreated,product=null,set
 
                     )}
 
-                    {/* Descripcion — fila completa */}
+                    {/* Descripción — fila completa */}
                     <FormField
 
                         className="full"
@@ -419,10 +427,10 @@ export default function ProductForm({isOpen,setIsOpen,onCreated,product=null,set
 
                     />
 
-                    {/**categorias */}
+                    {/**categorías */}
                     <div className="categories-field">
 
-                        <label>Categorias</label>
+                        <label>Categorías</label>
 
                         <MultiSelect
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ExportDocumentIcon } from '@/assets/icons'
 import { Get } from '@/helpers/fetcher'
+import { formatCurrency, formatNumber } from '@/helpers/formatters'
 import './ManagerReportsPage.css'
 
 const PRODUCT_LIMIT_OPTIONS = [10, 20, 50, 100]
@@ -32,17 +33,8 @@ function normalizeStore(store) {
   }
 }
 
-function toCurrency(value) {
-  return new Intl.NumberFormat('es-HN', {
-    style: 'currency',
-    currency: 'HNL',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(Number(value || 0))
-}
-
 function toInteger(value) {
-  return Number.parseInt(value || 0, 10)
+  return formatNumber(Number.parseInt(value || 0, 10))
 }
 
 function formatPeriod(period) {
@@ -106,16 +98,16 @@ function buildCompanyCsv(report) {
       ['Compañía', company.name],
       ['RTN', company.rtn],
       ['Correo', company.email],
-      ['Ganancia bruta mensual', toCurrency(company.totalMonthlyGrossGain)],
-      ['Ganancia neta mensual', toCurrency(company.totalMonthlyNetGain)],
+      ['Ganancia bruta mensual', formatCurrency(company.totalMonthlyGrossGain)],
+      ['Ganancia neta mensual', formatCurrency(company.totalMonthlyNetGain)],
       [],
       ['ID de tienda', 'Dirección', 'Activa', 'Ganancia bruta', 'Ganancia neta'],
       ...(company.stores || []).map((store) => [
         store.storeId,
         store.address,
         store.isOperating ? 'Sí' : 'No',
-        toCurrency(store.monthlyGrossGain),
-        toCurrency(store.monthlyNetGain),
+        formatCurrency(store.monthlyGrossGain),
+        formatCurrency(store.monthlyNetGain),
       ]),
     ],
   }
@@ -132,8 +124,8 @@ function buildStoreCsv(report) {
       ['ID de tienda', store.storeId],
       ['Dirección', store.address],
       ['Operando', store.isOperating ? 'Sí' : 'No'],
-      ['Ganancia bruta mensual', toCurrency(store.monthlyGrossGain)],
-      ['Ganancia neta mensual', toCurrency(store.monthlyNetGain)],
+      ['Ganancia bruta mensual', formatCurrency(store.monthlyGrossGain)],
+      ['Ganancia neta mensual', formatCurrency(store.monthlyNetGain)],
       [],
       ['ID de empleado', 'Nombre', 'Correo', 'Activo'],
       ...(store.employees || []).map((employee) => [
@@ -157,8 +149,8 @@ function buildProductsCsv(report) {
         product.name,
         toInteger(product.quantitySold),
         toInteger(product.inStock),
-        toCurrency(product.grossGain),
-        toCurrency(product.netGain),
+        formatCurrency(product.grossGain),
+        formatCurrency(product.netGain),
         (product.stores || [])
           .map((store) => `${store.address} | vendidos ${toInteger(store.quantitySold)} | stock ${toInteger(store.inStock)}`)
           .join(' ; '),
@@ -369,17 +361,17 @@ export default function ManagerReportsPage() {
           <div className="reports-stat-grid">
             <StatCard
               label="Ganancia neta de compañía"
-              value={reports.company?.company ? toCurrency(reports.company.company.totalMonthlyNetGain) : 'Sin datos'}
+              value={reports.company?.company ? formatCurrency(reports.company.company.totalMonthlyNetGain) : 'Sin datos'}
               tone="green"
             />
             <StatCard
               label="Ganancia neta de tienda"
-              value={reports.store?.store ? toCurrency(reports.store.store.monthlyNetGain) : 'Sin datos'}
+              value={reports.store?.store ? formatCurrency(reports.store.store.monthlyNetGain) : 'Sin datos'}
               tone="blue"
             />
             <StatCard
               label="Productos analizados"
-              value={String(productCount)}
+              value={formatNumber(productCount)}
               tone="gold"
             />
           </div>
@@ -478,12 +470,12 @@ export default function ManagerReportsPage() {
                   </article>
                   <article>
                     <span>Ganancia bruta</span>
-                    <strong>{toCurrency(reports.company.company.totalMonthlyGrossGain)}</strong>
+                    <strong>{formatCurrency(reports.company.company.totalMonthlyGrossGain)}</strong>
                     <p>{reports.company.company.rtn}</p>
                   </article>
                   <article>
                     <span>Ganancia neta</span>
-                    <strong>{toCurrency(reports.company.company.totalMonthlyNetGain)}</strong>
+                    <strong>{formatCurrency(reports.company.company.totalMonthlyNetGain)}</strong>
                     <p>{reports.company.company.email}</p>
                   </article>
                 </div>
@@ -506,8 +498,8 @@ export default function ManagerReportsPage() {
                             <span>{store.address}</span>
                           </td>
                           <td>{store.isOperating ? 'Activa' : 'Inactiva'}</td>
-                          <td>{toCurrency(store.monthlyGrossGain)}</td>
-                          <td>{toCurrency(store.monthlyNetGain)}</td>
+                          <td>{formatCurrency(store.monthlyGrossGain)}</td>
+                          <td>{formatCurrency(store.monthlyNetGain)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -553,11 +545,11 @@ export default function ManagerReportsPage() {
                   <div className="reports-store-metrics">
                     <div>
                       <span>Bruta</span>
-                      <strong>{toCurrency(reports.store.store.monthlyGrossGain)}</strong>
+                      <strong>{formatCurrency(reports.store.store.monthlyGrossGain)}</strong>
                     </div>
                     <div>
                       <span>Neta</span>
-                      <strong>{toCurrency(reports.store.store.monthlyNetGain)}</strong>
+                      <strong>{formatCurrency(reports.store.store.monthlyNetGain)}</strong>
                     </div>
                     <div>
                       <span>Estado</span>
@@ -638,11 +630,11 @@ export default function ManagerReportsPage() {
                       </div>
                       <div>
                         <span>Bruta</span>
-                        <strong>{toCurrency(product.grossGain)}</strong>
+                        <strong>{formatCurrency(product.grossGain)}</strong>
                       </div>
                       <div>
                         <span>Neta</span>
-                        <strong>{toCurrency(product.netGain)}</strong>
+                        <strong>{formatCurrency(product.netGain)}</strong>
                       </div>
                     </div>
 

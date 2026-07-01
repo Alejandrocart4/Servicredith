@@ -324,7 +324,7 @@ async function transferStock(req,res)
 
         }
 
-        return res.status(200).json({message:"Transferencia exitosa"})
+        return res.status(200).json({message:"Transferencia realizada correctamente"})
 
     }catch(error){
 

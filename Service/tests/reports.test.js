@@ -162,7 +162,7 @@ describe('GET /api/reports/products controller', () => {
     expect(db.sequelize.query).not.toHaveBeenCalled()
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.json).toHaveBeenCalledWith({
-      message: 'El companyId es requerido para generar el reporte de compañia'
+      message: 'El companyId es requerido para generar el reporte de compañía'
     })
   })
 
@@ -174,7 +174,7 @@ describe('GET /api/reports/products controller', () => {
     expect(db.sequelize.query).not.toHaveBeenCalled()
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.json).toHaveBeenCalledWith({
-      message: 'El mes debe ser un numero entre 1 y 12 o formato YYYY-MM'
+      message: 'El mes debe ser un número entre 1 y 12 o tener formato YYYY-MM'
     })
   })
 
@@ -186,7 +186,7 @@ describe('GET /api/reports/products controller', () => {
     expect(db.sequelize.query).not.toHaveBeenCalled()
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.json).toHaveBeenCalledWith({
-      message: 'El mes debe ser un numero entre 1 y 12 o formato YYYY-MM'
+      message: 'El mes debe ser un número entre 1 y 12 o tener formato YYYY-MM'
     })
   })
 
@@ -485,7 +485,7 @@ describe('GET /api/reports/companies controller', () => {
     expect(db.sequelize.query).not.toHaveBeenCalled()
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.json).toHaveBeenCalledWith({
-      message: 'El companyId es requerido para generar el reporte de compañia'
+      message: 'El companyId es requerido para generar el reporte de compañía'
     })
   })
 
@@ -499,7 +499,7 @@ describe('GET /api/reports/companies controller', () => {
     expect(db.sequelize.query).toHaveBeenCalledTimes(1)
     expect(res.status).toHaveBeenCalledWith(404)
     expect(res.json).toHaveBeenCalledWith({
-      message: 'Compañia no encontrada'
+      message: 'Compañía no encontrada'
     })
   })
 })

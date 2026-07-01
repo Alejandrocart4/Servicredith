@@ -11,7 +11,11 @@
     "start": "cross-env NODE_ENV=development nodemon index.js",
     "migrate": "sequelize-cli db:migrate",
     "seed:dev": "sequelize-cli db:seed --seed 20260521083057-mock-company-data.js",
+    "seed:preview": "sequelize-cli db:seed --seed 20260614094500-homepage-preview-demo-data.js",
     "seed:prd": "sequelize-cli db:seed --seed 20260516000000-prd-base-data.js",
+    "seed:local": "node scripts/seed-local.js",
+    "setup:local": "pnpm run migrate && pnpm run seed:local",
+    "start:local": "pnpm run setup:local && node index.js",
     "test": "cross-env NODE_ENV=test jest"
   },
   "dependencies": {

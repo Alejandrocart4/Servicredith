@@ -45,7 +45,7 @@ async function postProduct(req, res) {
         if(!category)
         {
 
-            return res.status(404).json({message:'La categoria no existe'})
+            return res.status(404).json({message:'La categoría no existe'})
 
         }
         if(!store)
@@ -88,7 +88,7 @@ async function updateProduct(req, res)
     const{id}=req.params
 
     if (!id || id !== productId) {
-        return res.status(400).json({message:"El id enviado por la ruta debe encajar con el del producto a modificar"});
+        return res.status(400).json({message:"El id enviado por la ruta debe coincidir con el del producto a modificar"});
     }
 
     if (!name || name === "") {
@@ -98,7 +98,7 @@ async function updateProduct(req, res)
     if (sellPrice==null || sellPrice < 0) 
     {
 
-        return res.status(400).json({message:"El precio de venta es invalido"});
+        return res.status(400).json({message:"El precio de venta es inválido"});
 
     }
 
@@ -139,7 +139,7 @@ async function updateProduct(req, res)
 
             if(stock<0){
 
-                return res.status(400).json({message:"Stock invalido"})
+                return res.status(400).json({message:"Stock inválido"})
 
             }
             const inventory=await StoresInventories.findOne({where:{productId,storeId}})
@@ -154,7 +154,7 @@ async function updateProduct(req, res)
 
         }
 
-        res.status(200).json({message:"Producto editado exitosamente"})
+        res.status(200).json({message:"Producto editado correctamente"})
 
     } catch (err) {
 
@@ -300,11 +300,11 @@ async function recoverProduct(req,res)
 }
 
 
-//agregar opcion de traer la cantidad de stock por categoria --NO OLVIDAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+//agregar opción de traer la cantidad de stock por categoría
 /*
 Lista productos.
 Un producto aparece una sola vez.
-Sirve para administrar catalogo.
+Sirve para administrar catálogo.
 */
 async function getPagedProducts(req,res)
 {

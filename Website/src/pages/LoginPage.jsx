@@ -5,7 +5,7 @@ import './LoginPage.css'
 import { Post } from '@/helpers/fetcher'
 import { LoginFormConfig } from '@/pages/constants/FormConfig'
 
-export default function LoginPage({ onLogin, onRegister }) {
+export default function LoginPage({ onLogin }) {
   const [form, setForm] = useState(LoginFormConfig.INITIAL_LOG)
   const [errors, setErrors] = useState({})
   const [touched, setTouched] = useState({})
@@ -49,7 +49,7 @@ export default function LoginPage({ onLogin, onRegister }) {
     <div className="login-shell">
 
       <div className="login-brand-column">
-        <BrandPanel description="Acceso interno para administrar usuarios,reportes y operaciones de la sucursal." />
+        <BrandPanel description="Acceso interno para administrar usuarios, reportes y operaciones de la sucursal." />
       </div>
 
       <div className="login-content-column">
@@ -58,7 +58,7 @@ export default function LoginPage({ onLogin, onRegister }) {
 
             <div className="login-card-header">
               <p className="login-eyebrow">Acceso administrativo</p>
-              <h2 id="login-title">Iniciar sesion</h2>
+              <h2 id="login-title">Iniciar sesión</h2>
               <p>Ingresa con un perfil autorizado para administrar la tienda.</p>
             </div>
 
@@ -89,7 +89,7 @@ export default function LoginPage({ onLogin, onRegister }) {
               <FormField
                 inputName="password"
                 description="Contraseña"
-                placeholder="Ingresa tu contrasena"
+                placeholder="Ingresa tu contraseña"
                 type="password"
                 value={form.password}
                 onChange={handleChange}

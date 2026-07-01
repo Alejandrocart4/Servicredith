@@ -38,7 +38,7 @@ const createUser = async (req, res) => {
         }
         if (!email || email.trim() === "") {
 
-            return res.status(400).json({ message: "El correo electronico es requerido" })
+            return res.status(400).json({ message: "El correo electrónico es requerido" })
 
         }
 
@@ -289,7 +289,7 @@ const loginUser = async (req, res) => {
 
         if (!email || email.trim() === "") {
 
-            return res.status(400).json({ message: "El correo electronico es requerido" })
+            return res.status(400).json({ message: "El correo electrónico es requerido" })
 
         }
 
@@ -344,10 +344,10 @@ const loginUser = async (req, res) => {
 
         const token = generateToken(user, roleName, user.storeId)
 
-        //Cookie 1: JWT — HttpOnly,el browser la envia automaticamente
+        //Cookie 1: JWT — HttpOnly, el navegador la envía automáticamente
         res.cookie('token', token, { ...COOKIE_OPTIONS, httpOnly: true })
 
-        //Cookie 2: datos de sesion — legible desde el frontend (sin HttpOnly)
+        //Cookie 2: datos de sesión — legible desde el frontend (sin HttpOnly)
         res.cookie('session', JSON.stringify({
             userId: user.userId,
             first_name: user.first_name,

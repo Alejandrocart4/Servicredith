@@ -1,6 +1,6 @@
 .multi-select__multi-value__label,
 .multi-select__option {
-    color: black !important;
+    color: var(--text-dark) !important;
 }
 
 .multi-select__control {

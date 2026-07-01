@@ -1,10 +1,10 @@
-export const Directions = {
+const DIRECTIONS = {
     HORIZONTAL: 'row',
     VERTICAL: 'column',
 }
 
 export function StackDiv({
-    direction = Directions.VERTICAL,
+    direction = DIRECTIONS.VERTICAL,
     gap,
     padding = '5px',
     margin = '5px',

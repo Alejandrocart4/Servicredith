@@ -4,24 +4,10 @@ import {
     Tooltip, ResponsiveContainer
 } from 'recharts'
 import { Get } from '@/helpers/fetcher'
+import { formatCurrency, formatNumber, formatPercent } from '@/helpers/formatters'
 import './DashboardHomePage.css'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function fmtCurrency(v) {
-    return new Intl.NumberFormat('es-HN', {
-        style: 'currency',
-        currency: 'HNL',
-        maximumFractionDigits: 0,
-    }).format(Number(v || 0))
-}
-
-function fmtShort(v) {
-    const n = Number(v || 0)
-    if (n >= 1_000_000) return `L${(n / 1_000_000).toFixed(1)}M`
-    if (n >= 1_000)     return `L${(n / 1_000).toFixed(0)}K`
-    return `L${n.toFixed(0)}`
-}
 
 function fmtDate(dateStr) {
     if (!dateStr) return '—'
@@ -104,7 +90,7 @@ function MetricCard({ label, value, trend, trendLabel, loading }) {
             }
             {trend !== undefined && !loading && (
                 <p className={`dash-metric-trend ${isPositive ? 'dash-metric-trend--up' : 'dash-metric-trend--down'}`}>
-                    {isPositive ? '↑' : '↓'} {Math.abs(trend).toFixed(1)}% {trendLabel}
+                    {isPositive ? '↑' : '↓'} {formatPercent(Math.abs(trend))} {trendLabel}
                 </p>
             )}
         </div>
@@ -113,7 +99,11 @@ function MetricCard({ label, value, trend, trendLabel, loading }) {
 
 // ─── RevenueChart (Recharts) ──────────────────────────────────────────────────
 
-const CHART_TABS = ['Meses', 'Semanas', 'Dias']
+const CHART_TABS = ['Meses', 'Semanas', 'Días']
+
+function getCssVar(name, fallback) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+}
 
 function CustomTooltip({ active, payload, label }) {
     if (!active || !payload?.length) return null
@@ -122,7 +112,7 @@ function CustomTooltip({ active, payload, label }) {
             <p className="dash-tooltip-label">{label}</p>
             {payload.map(p => (
                 <p key={p.dataKey} style={{ color: p.color }}>
-                    {p.dataKey === 'gross' ? 'Bruto' : 'Neto'}: {fmtCurrency(p.value)}
+                    {p.dataKey === 'gross' ? 'Bruto' : 'Neto'}: {formatCurrency(p.value)}
                 </p>
             ))}
         </div>
@@ -133,6 +123,14 @@ function RevenueChart({ monthly, weekly, daily, loading }) {
     const [tab, setTab] = useState(0)
 
     const data = tab === 0 ? monthly : tab === 1 ? weekly : daily
+    const chartColors = {
+        grid: getCssVar('--chart-grid', '#e2e8f0'),
+        axis: getCssVar('--chart-axis', '#64748b'),
+        axisSoft: getCssVar('--chart-axis-soft', '#94a3b8'),
+        dot: getCssVar('--chart-dot', '#ffffff'),
+        gross: getCssVar('--chart-gross', '#1f8b3c'),
+        net: getCssVar('--chart-net', '#3483d1'),
+    }
 
     function renderBody() {
         if (loading) return <div className="dash-skeleton dash-chart-skeleton" />
@@ -143,24 +141,24 @@ function RevenueChart({ monthly, weekly, daily, loading }) {
                 <AreaChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                     <defs>
                         <linearGradient id="dh-grad-gross" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%"  stopColor="#1f8b3c" stopOpacity={0.25} />
-                            <stop offset="95%" stopColor="#1f8b3c" stopOpacity={0.02} />
+                            <stop offset="5%"  stopColor={chartColors.gross} stopOpacity={0.25} />
+                            <stop offset="95%" stopColor={chartColors.gross} stopOpacity={0.02} />
                         </linearGradient>
                         <linearGradient id="dh-grad-net" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%"  stopColor="#3483d1" stopOpacity={0.25} />
-                            <stop offset="95%" stopColor="#3483d1" stopOpacity={0.02} />
+                            <stop offset="5%"  stopColor={chartColors.net} stopOpacity={0.25} />
+                            <stop offset="95%" stopColor={chartColors.net} stopOpacity={0.02} />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} vertical={false} />
                     <XAxis
                         dataKey="label"
-                        tick={{ fontSize: 12, fill: '#64748b' }}
+                        tick={{ fontSize: 12, fill: chartColors.axis }}
                         axisLine={false}
                         tickLine={false}
                     />
                     <YAxis
-                        tickFormatter={fmtShort}
-                        tick={{ fontSize: 11, fill: '#94a3b8' }}
+                        tickFormatter={(value) => formatCurrency(value, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                        tick={{ fontSize: 11, fill: chartColors.axisSoft }}
                         axisLine={false}
                         tickLine={false}
                         width={60}
@@ -169,19 +167,19 @@ function RevenueChart({ monthly, weekly, daily, loading }) {
                     <Area
                         type="monotone"
                         dataKey="gross"
-                        stroke="#1f8b3c"
+                        stroke={chartColors.gross}
                         strokeWidth={2.5}
                         fill="url(#dh-grad-gross)"
-                        dot={{ r: 4, fill: '#fff', stroke: '#1f8b3c', strokeWidth: 2 }}
+                        dot={{ r: 4, fill: chartColors.dot, stroke: chartColors.gross, strokeWidth: 2 }}
                         activeDot={{ r: 6 }}
                     />
                     <Area
                         type="monotone"
                         dataKey="net"
-                        stroke="#3483d1"
+                        stroke={chartColors.net}
                         strokeWidth={2.5}
                         fill="url(#dh-grad-net)"
-                        dot={{ r: 4, fill: '#fff', stroke: '#3483d1', strokeWidth: 2 }}
+                        dot={{ r: 4, fill: chartColors.dot, stroke: chartColors.net, strokeWidth: 2 }}
                         activeDot={{ r: 6 }}
                     />
                 </AreaChart>
@@ -196,9 +194,9 @@ function RevenueChart({ monthly, weekly, daily, loading }) {
                     <h3 className="dash-card-title">Ingresos</h3>
                     {data.length > 0 && (
                         <div className="dash-chart-legend">
-                            <span className="dash-legend-dot" style={{ background: '#1f8b3c' }} />
+                            <span className="dash-legend-dot" style={{ background: chartColors.gross }} />
                             <span>Bruto</span>
-                            <span className="dash-legend-dot" style={{ background: '#3483d1', marginLeft: 12 }} />
+                            <span className="dash-legend-dot" style={{ background: chartColors.net, marginLeft: 12 }} />
                             <span>Neto</span>
                         </div>
                     )}
@@ -234,7 +232,7 @@ function StatusBadge({ status }) {
 function PendingPaymentsTable({ payments, loading, onViewPlans }) {
     return (
         <div className="dash-card">
-            <h3 className="dash-card-title">Pagos Pendientes</h3>
+            <h3 className="dash-card-title">Pagos pendientes</h3>
             {loading
                 ? <div className="dash-skeleton dash-table-skeleton" />
                 : (
@@ -242,7 +240,7 @@ function PendingPaymentsTable({ payments, loading, onViewPlans }) {
                         <table className="dash-table">
                             <thead>
                                 <tr>
-                                    <th>No. Plan</th>
+                                    <th>N.º de plan</th>
                                     <th>Cliente</th>
                                     <th>Vence</th>
                                     <th>Cuota</th>
@@ -261,8 +259,8 @@ function PendingPaymentsTable({ payments, loading, onViewPlans }) {
                                             </td>
                                             <td>{p.client?.name ?? '—'}</td>
                                             <td>{fmtDate(p.paymentDeadline)}</td>
-                                            <td>{fmtCurrency(p.paymentAmount)}</td>
-                                            <td className="dash-col-bold">{fmtCurrency(p.amountToPay)}</td>
+                                            <td>{formatCurrency(p.paymentAmount)}</td>
+                                            <td className="dash-col-bold">{formatCurrency(p.amountToPay)}</td>
                                             <td><StatusBadge status={p.planStatus} /></td>
                                             <td>
                                                 <button
@@ -290,8 +288,6 @@ function PendingPaymentsTable({ payments, loading, onViewPlans }) {
 
 // ─── InventorySidebar ─────────────────────────────────────────────────────────
 
-const LOW_STOCK_THRESHOLD = 5
-
 function InventorySidebar({ items, loading, storeAddress }) {
     const perStore = items[0]?.store != null
 
@@ -299,13 +295,13 @@ function InventorySidebar({ items, loading, storeAddress }) {
         <div className="dash-card dash-inventory-card">
             <div className="dash-inventory-header">
                 <div>
-                    <h3 className="dash-card-title">Stock Bajo</h3>
+            <h3 className="dash-card-title">Stock bajo</h3>
                     {!perStore && storeAddress && (
                         <p className="dash-inventory-store">Tienda: {storeAddress}</p>
                     )}
                 </div>
                 {!loading && items.length > 0 && (
-                    <span className="dash-inventory-badge">{items.length}</span>
+                    <span className="dash-inventory-badge">{formatNumber(items.length)}</span>
                 )}
             </div>
 
@@ -329,7 +325,7 @@ function InventorySidebar({ items, loading, storeAddress }) {
                                               </p>
                                         }
                                     </div>
-                                    <span className="dash-inventory-qty">{item.inStock}</span>
+                                    <span className="dash-inventory-qty">{formatNumber(item.inStock)}</span>
                                 </div>
                             ))}
                         </div>
@@ -407,22 +403,22 @@ export default function DashboardHomePage({ session, onNavigate }) {
         <div className="dash-root">
             <div className="dash-metrics-row">
                 <MetricCard
-                    label="Ganancias del Mes"
-                    value={fmtCurrency(currentNet)}
+                    label="Ganancias del mes"
+                    value={formatCurrency(currentNet)}
                     trend={netTrend}
                     trendLabel="vs. mes anterior"
                     loading={chartLoading}
                 />
                 <MetricCard
-                    label="Ingresos Brutos"
-                    value={fmtCurrency(currentGross)}
+                    label="Ingresos brutos"
+                    value={formatCurrency(currentGross)}
                     trend={grossTrend}
                     trendLabel="vs. mes anterior"
                     loading={chartLoading}
                 />
                 <MetricCard
-                    label="Pagos Pendientes"
-                    value={`${payments.length} pago${payments.length !== 1 ? 's' : ''}`}
+                    label="Pagos pendientes"
+                    value={`${formatNumber(payments.length)} pago${payments.length !== 1 ? 's' : ''}`}
                     loading={paymentsLoading}
                 />
             </div>

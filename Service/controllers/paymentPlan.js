@@ -153,7 +153,7 @@ async function postRecalculatePlan(req, res) {
         return res.status(400).json({ message: `El plan de pago ya ha sido cubierto!` });
 
     if (newMonths <= 0)
-        return res.status(400).json({ message: `El numero de meses debe ser mayor a cero.` });
+        return res.status(400).json({ message: `El número de meses debe ser mayor a cero.` });
 
     if (newMonths > plan.monthsToPay)
         return res.status(400).json({ message: `No se puede alargar el pago a plazos.` });
@@ -289,7 +289,7 @@ async function postPayPlan(req, res) {
             return healedPayedAmount;
         });
 
-        return res.status(200).json({ message: `El pago se ha realizado con exito!`, payedAmount: finalPayedAmount });
+        return res.status(200).json({ message: `El pago se ha realizado con éxito.`, payedAmount: finalPayedAmount });
     } catch (error) {
         if (error.status) {
             return res.status(error.status).json({ message: error.message });

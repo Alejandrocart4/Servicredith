@@ -22,21 +22,21 @@ const {
  *       - in: query
  *         name: companyId
  *         required: true
- *         description: ID de la compania para limitar el reporte.
+ *         description: ID de la compañía para limitar el reporte.
  *         schema:
  *           type: string
  *           format: uuid
  *       - in: query
  *         name: month
  *         required: false
- *         description: Mes a filtrar. Puede enviarse como YYYY-MM o como numero de 1 a 12 junto con year.
+ *         description: Mes a filtrar. Puede enviarse como YYYY-MM o como número de 1 a 12 junto con year.
  *         schema:
  *           type: string
  *           example: "2026-05"
  *       - in: query
  *         name: year
  *         required: false
- *         description: Year requerido cuando month se envia como numero.
+ *         description: Year requerido cuando month se envía como número.
  *         schema:
  *           type: integer
  *           example: 2026
@@ -131,7 +131,7 @@ const {
  *                             netGain:
  *                               type: number
  *       400:
- *         description: Filtros invalidos
+ *         description: Filtros inválidos
  *       500:
  *         description: Error interno del servidor
  */
@@ -156,14 +156,14 @@ router.get('/reports/products', authMiddleware,roleMiddleware(ROLE.OWNER),getPro
  *       - in: query
  *         name: month
  *         required: false
- *         description: Mes a filtrar. Si no se envia, se usa el mes actual. Puede enviarse como YYYY-MM o como numero de 1 a 12 junto con year.
+ *         description: Mes a filtrar. Si no se envía, se usa el mes actual. Puede enviarse como YYYY-MM o como número de 1 a 12 junto con year.
  *         schema:
  *           type: string
  *           example: "2026-05"
  *       - in: query
  *         name: year
  *         required: false
- *         description: Year requerido cuando month se envia como numero.
+ *         description: Year requerido cuando month se envía como número.
  *         schema:
  *           type: integer
  *           example: 2026
@@ -226,7 +226,7 @@ router.get('/reports/products', authMiddleware,roleMiddleware(ROLE.OWNER),getPro
  *                           isActive:
  *                             type: boolean
  *       400:
- *         description: Filtros invalidos
+ *         description: Filtros inválidos
  *       404:
  *         description: Tienda no encontrada
  *       500:
@@ -239,7 +239,7 @@ router.get('/reports/stores', authMiddleware,roleMiddleware(ROLE.OWNER,ROLE.ADMI
  * @swagger
  * /api/reports/companies:
  *   get:
- *     summary: Obtener reporte mensual de una compania
+ *     summary: Obtener reporte mensual de una compañía
  *     tags: [Reports]
  *     security:
  *       - cookieAuth: []
@@ -247,27 +247,27 @@ router.get('/reports/stores', authMiddleware,roleMiddleware(ROLE.OWNER,ROLE.ADMI
  *       - in: query
  *         name: companyId
  *         required: true
- *         description: ID de la compania a reportar.
+ *         description: ID de la compañía a reportar.
  *         schema:
  *           type: string
  *           format: uuid
  *       - in: query
  *         name: month
  *         required: false
- *         description: Mes a filtrar. Si no se envia, se usa el mes actual. Puede enviarse como YYYY-MM o como numero de 1 a 12 junto con year.
+ *         description: Mes a filtrar. Si no se envía, se usa el mes actual. Puede enviarse como YYYY-MM o como número de 1 a 12 junto con year.
  *         schema:
  *           type: string
  *           example: "2026-05"
  *       - in: query
  *         name: year
  *         required: false
- *         description: Year requerido cuando month se envia como numero.
+ *         description: Year requerido cuando month se envía como número.
  *         schema:
  *           type: integer
  *           example: 2026
  *     responses:
  *       200:
- *         description: Reporte mensual de compania obtenido correctamente
+ *         description: Reporte mensual de compañía obtenido correctamente
  *         content:
  *           application/json:
  *             schema:
@@ -328,9 +328,9 @@ router.get('/reports/stores', authMiddleware,roleMiddleware(ROLE.OWNER,ROLE.ADMI
  *                           monthlyNetGain:
  *                             type: number
  *       400:
- *         description: Filtros invalidos
+ *         description: Filtros inválidos
  *       404:
- *         description: Compania no encontrada
+ *         description: Compañía no encontrada
  *       500:
  *         description: Error interno del servidor
  */

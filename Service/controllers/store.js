@@ -6,13 +6,13 @@ const createStore = async (req, res) => {
     const { storeNumber, address, companyId } = req.body
 
     if (storeNumber === undefined || storeNumber === null || storeNumber === '') {
-      return res.status(400).json({ message: 'El numero de tienda es requerido' })
+      return res.status(400).json({ message: 'El número de tienda es requerido' })
     }
 
     const parsedStoreNumber = Number(storeNumber)
 
     if (!Number.isInteger(parsedStoreNumber) || parsedStoreNumber <= 0) {
-      return res.status(400).json({ message: 'El numero de tienda debe ser un entero positivo' })
+      return res.status(400).json({ message: 'El número de tienda debe ser un entero positivo' })
     }
 
     if (!companyId || companyId.trim() === '') {
@@ -109,7 +109,7 @@ const updateStore = async (req, res) => {
       const parsedStoreNumber = Number(storeNumber)
 
       if (!Number.isInteger(parsedStoreNumber) || parsedStoreNumber <= 0) {
-        return res.status(400).json({ message: 'El numero de tienda debe ser un entero positivo' })
+        return res.status(400).json({ message: 'El número de tienda debe ser un entero positivo' })
       }
 
       dataToUpdate.storeNumber = parsedStoreNumber
@@ -121,7 +121,7 @@ const updateStore = async (req, res) => {
 
     if (companyId !== undefined) {
       if (!companyId || companyId.trim() === '') {
-        return res.status(400).json({ message: 'El id de la empresa no puede estar vacio' })
+        return res.status(400).json({ message: 'El id de la empresa no puede estar vacío' })
       }
 
       const company = await Companies.findByPk(companyId)
@@ -155,7 +155,7 @@ const deactivateStore = async (req, res) => {
     }
 
     if (!store.isActive) {
-      return res.status(400).json({ message: 'La tienda ya esta desactivada' })
+      return res.status(400).json({ message: 'La tienda ya está desactivada' })
     }
 
     await store.update({ isActive: false })
@@ -177,7 +177,7 @@ const activateStore = async (req, res) => {
     }
 
     if (store.isActive) {
-      return res.status(400).json({ message: 'La tienda ya esta activa' })
+      return res.status(400).json({ message: 'La tienda ya está activa' })
     }
 
     await store.update({ isActive: true })

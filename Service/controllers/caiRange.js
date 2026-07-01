@@ -34,7 +34,7 @@ const createCaiRange = async (req, res) => {
         const parsedMax = Number(maxRange)
 
         if (isNaN(parsedMin) || isNaN(parsedMax)) {
-            return res.status(400).json({ message: 'Los rangos deben ser numeros validos' })
+            return res.status(400).json({ message: 'Los rangos deben ser números válidos' })
         }
         if (parsedMin < 0 || parsedMax < 0) {
             return res.status(400).json({ message: 'Los rangos no pueden ser negativos' })
@@ -46,7 +46,7 @@ const createCaiRange = async (req, res) => {
         const storeMax = await getStoreMaxRange(cai.storeId)
         if (storeMax > 0 && parsedMin <= storeMax) {
             return res.status(400).json({
-                message: `El rango inicial debe ser mayor al ultimo rango registrado para esta tienda (${storeMax})`
+                message: `El rango inicial debe ser mayor al último rango registrado para esta tienda (${storeMax})`
             })
         }
 
@@ -147,10 +147,10 @@ const updateCaiRange = async (req, res) => {
             const parsedMax = Number(maxRange)
 
             if (isNaN(parsedMax) || parsedMax < 0) {
-                return res.status(400).json({ message: 'El rango final no es un numero valido' })
+                return res.status(400).json({ message: 'El rango final no es un número válido' })
             }
             if (parsedMax < caiRange.currentNumber) {
-                return res.status(400).json({ message: 'El rango final no puede ser menor al numero de factura actual' })
+                return res.status(400).json({ message: 'El rango final no puede ser menor al número de factura actual' })
             }
             if (parsedMax <= caiRange.maxRange) {
                 return res.status(400).json({ message: 'El nuevo rango final debe ser mayor al actual' })
