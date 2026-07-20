@@ -1,0 +1,235 @@
+import { useCallback, useState } from 'react'
+import { DataGrid, DataGridHeader, HeaderTextFilter } from '@/components/dataGrid/DataGrid'
+import { ActionColumn, DataColumn, DataTable, DeleteAction, UpdateAction } from '@/components/dataGrid/DataTable'
+import FormDialog from '@/components/dialogs/SubmitDialog'
+import { Delete, Get, Post, Put } from '@/helpers/fetcher'
+import './AdminCompanyManagementPage.css'
+import { toast } from 'react-toastify'
+
+const emptyForm = {
+  name: '',
+  rtn: '',
+  email: '',
+  address: '',
+}
+
+export default function AdminCompanyManagementPage() {
+  const [filter, setFilter] = useState('')
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingCompany, setEditingCompany] = useState(null)
+  const [form, setForm] = useState(emptyForm)
+  const [error, setError] = useState('')
+  const [refreshKey, setRefreshKey] = useState(0)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [pendingCompany, setPendingCompany] = useState(null)
+
+  const loadCompanies = useCallback(
+    async (offset, limit) => {
+      const res = await Get(`/api/companies?filter=${filter}&offset=${offset}&limit=${limit}&_=${refreshKey}`)
+      if (res.status !== 200) {
+        throw new Error(res.json.message || 'No se pudieron cargar las compañías')
+      }
+      return res.json
+    },
+    [filter, refreshKey]
+  )
+
+  const handleFormChange = (event) => {
+    setForm((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }))
+    setError('')
+  }
+
+  const openNewDialog = () => {
+    setEditingCompany(null)
+    setForm(emptyForm)
+    setError('')
+    setIsDialogOpen(true)
+  }
+
+  const openEditDialog = (company) => {
+    setEditingCompany(company)
+    setForm({
+      name: company.name || '',
+      rtn: company.rtn || '',
+      email: company.email || '',
+      address: company.address || '',
+    })
+    setError('')
+    setIsDialogOpen(true)
+  }
+
+  const handleAccept = async () => {
+    const payload = {
+      name: form.name.trim(),
+      rtn: form.rtn.trim(),
+      email: form.email.trim(),
+      address: form.address.trim(),
+    }
+
+    try {
+      let res
+
+      if (editingCompany) {
+        res = await Put(`/api/companies/${editingCompany.companyId}`, JSON.stringify(payload))
+      } else {
+        res = await Post('/api/companies', JSON.stringify(payload))
+      }
+
+      if (res.status !== 200 && res.status !== 201) {
+        throw new Error(res.json.message || 'No se pudo completar la solicitud')
+      }
+
+      toast.success(
+        editingCompany
+          ? `Compañía ${payload.name} actualizada correctamente`
+          : `Compañía ${payload.name} creada correctamente`
+      )
+
+      setIsDialogOpen(false)
+      setRefreshKey((current) => current + 1)
+    } catch (requestError) {
+      setError(requestError.message)
+      toast.error(requestError.message)
+    }
+  }
+
+  const handleDelete = (company) => {
+    setPendingCompany(company)
+    setConfirmOpen(true)
+  }
+
+  const doDelete = async () => {
+    if (!pendingCompany) return
+    setConfirmOpen(false)
+    const company = pendingCompany
+    setPendingCompany(null)
+
+    try {
+      const res = await Delete(`/api/companies/${company.companyId}`)
+      if (res.status !== 200) {
+        throw new Error(res.json.message || 'No se pudo eliminar la compañía')
+      }
+
+      toast.success(`Compañía ${company.name} eliminada correctamente`)
+
+      setRefreshKey((current) => current + 1)
+    } catch (requestError) {
+      setError(requestError.message)
+      toast.error(requestError.message)
+    }
+  }
+
+  const handleClose = () => {
+    setIsDialogOpen(false)
+    setError('')
+  }
+
+  return (
+    <div className="company-admin-page">
+    <DataGrid>
+      <DataGridHeader
+        title="Compañías"
+        description="Administración"
+        addButtonTxt="Nueva compañía"
+        onAddClick={openNewDialog}
+      >
+        <HeaderTextFilter
+          filterPlaceholder="NOMBRE"
+          className="grid-main-filter"
+          value={filter}
+          onChange={setFilter}
+        />
+      </DataGridHeader>
+
+      <DataTable
+        key={`${filter}-${refreshKey}`}
+        onLoad={loadCompanies}
+        rowTitle="Click para editar"
+        onRowClick={openEditDialog}
+      >
+        <DataColumn propertyName="name" title="Nombre" />
+        <DataColumn propertyName="rtn" title="RTN" />
+        <DataColumn propertyName="email" title="Correo" />
+        <DataColumn propertyName="address" title="Dirección" />
+        <ActionColumn>
+          <UpdateAction onClick={(row) => openEditDialog(row)} />
+          <DeleteAction onClick={(row) => handleDelete(row)} />
+        </ActionColumn>
+      </DataTable>
+
+      <FormDialog
+        title={editingCompany ? 'Editar compañía' : 'Nueva compañía'}
+        isOpen={isDialogOpen}
+        setIsOpen={setIsDialogOpen}
+        onAccept={handleAccept}
+        acceptText="Guardar"
+        onClose={handleClose}
+        closeText="Cancelar"
+      >
+        {error && <div className="company-admin-alert error">{error}</div>}
+
+        <form className="company-dialog-form">
+          <label>
+            Nombre
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleFormChange}
+              placeholder="ServiCredith"
+              required
+            />
+          </label>
+
+          <label>
+            RTN
+            <input
+              name="rtn"
+              value={form.rtn}
+              onChange={handleFormChange}
+              placeholder="08011999123456"
+              required
+            />
+          </label>
+
+          <label>
+            Correo
+            <input
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleFormChange}
+              placeholder="contacto@servicredith.com"
+            />
+          </label>
+
+          <label>
+            Dirección
+            <textarea
+              name="address"
+              value={form.address}
+              onChange={handleFormChange}
+              placeholder="Tegucigalpa, Honduras"
+              rows="4"
+            />
+          </label>
+        </form>
+      </FormDialog>
+
+      <FormDialog
+        title="Confirmar eliminación"
+        isOpen={confirmOpen}
+        setIsOpen={setConfirmOpen}
+        onAccept={doDelete}
+        acceptText="Eliminar"
+        onClose={() => { setConfirmOpen(false); setPendingCompany(null) }}
+        closeText="Cancelar"
+      >
+        <p>{`¿Eliminar la compañía "${pendingCompany?.name}"?`}</p>
+      </FormDialog>
+    </DataGrid>
+    </div>
+  )
+}

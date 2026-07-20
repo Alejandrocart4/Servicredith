@@ -1,0 +1,25 @@
+.copyright-notice
+{
+    color: var(--text-mid);
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.45;
+    opacity: 0.86;
+    text-align: center;
+}
+
+.copyright-notice--auth
+{
+    margin: 22px auto 0;
+    max-width: 340px;
+}
+
+.copyright-notice--sidebar
+{
+    margin: 0 4px;
+}
+
+:root[data-theme='dark'] .copyright-notice
+{
+    color: rgba(184, 202, 190, 0.86);
+}

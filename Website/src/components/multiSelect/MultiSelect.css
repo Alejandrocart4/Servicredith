@@ -1,0 +1,8 @@
+.multi-select__multi-value__label,
+.multi-select__option {
+    color: var(--text-dark) !important;
+}
+
+.multi-select__control {
+    border-radius: 8px;
+}

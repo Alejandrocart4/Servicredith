@@ -1,0 +1,45 @@
+{
+  "name": "service",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development nodemon index.js",
+    "migrate": "sequelize-cli db:migrate",
+    "seed:dev": "sequelize-cli db:seed --seed 20260521083057-mock-company-data.js",
+    "seed:preview": "sequelize-cli db:seed --seed 20260614094500-homepage-preview-demo-data.js",
+    "seed:prd": "sequelize-cli db:seed --seed 20260516000000-prd-base-data.js",
+    "seed:local": "node scripts/seed-local.js",
+    "setup:local": "pnpm run migrate && pnpm run seed:local",
+    "start:local": "pnpm run setup:local && node index.js",
+    "test": "cross-env NODE_ENV=test jest"
+  },
+  "dependencies": {
+    "@sequelize/postgres": "^7.0.0-alpha.48",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.20.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.8",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "jest": "^30.4.2",
+    "nodemon": "^3.1.14",
+    "sequelize-cli": "^6.6.5",
+    "supertest": "^7.2.2",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "packageManager": "pnpm@11.2.2+sha512.36e6621fad506178936455e70247b8808ef4ec25797a9f437a93281a020484e2607f6a469a22e982987c3dbb8866e3071514ab10a4a1749e06edcd1ec118436f"
+}

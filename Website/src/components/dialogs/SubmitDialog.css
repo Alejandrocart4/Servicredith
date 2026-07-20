@@ -1,0 +1,53 @@
+.submit-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.submit-container button {
+    font-size: 24px;
+    padding: 10px 20px;
+    margin: 20px;
+    border-radius: 10px;
+    border: none;
+    transition: 0.3s;
+    color: white;
+    cursor: pointer;
+}
+
+.submit-container button:active {
+    color: black;
+}
+
+.submit-btn {
+    background: linear-gradient(120deg, var(--green-dark), var(--green-mid) 62%, var(--blue));
+}
+
+.submit-btn:hover {
+    filter: brightness(1.03);
+    box-shadow: 0 10px 24px rgba(26, 122, 60, 0.14);
+    transform: translateY(-1px);
+}
+
+.close-btn {
+    background-color: #6b7280;
+}
+
+.close-btn:hover {
+    background-color: #4b5563;
+}
+
+.submit-btn:disabled
+{
+    background: #b8b8b8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: .85;
+}
+
+.submit-btn:disabled:hover
+{
+    filter: none;
+    transform: none;
+}
