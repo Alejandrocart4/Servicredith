@@ -1,5 +1,11 @@
 # Servicredith
 
+## Manual de usuario
+
+Para instalar Docker, iniciar ServiCredith localmente y crear el acceso directo de la web como aplicacion, consulta:
+
+- [MANUAL_USUARIO.md](MANUAL_USUARIO.md)
+
 ## Arranque local sin comandos manuales
 
 Para correr el proyecto en otra PC de forma local, instala y abre Docker Desktop. Luego haz doble clic en:
